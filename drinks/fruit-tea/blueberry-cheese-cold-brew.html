@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueberry Cheese Cold Brew</title>
+<style>
+  :root{
+    --ink:#241a38;
+    --indigo:#2c2065;
+    --blue:#3d52b5;
+    --berry:#6b3fa0;
+    --cream:#efe7d6;
+    --blush:#e9e6f6;
+    --paper:#f7f5fc;
+    --frost:#eef0f6;
+    --line:#d9d0ee;
+    --muted:#7d6f9a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:
+      radial-gradient(120% 80% at 80% -10%, #e3e0fb 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #ece6f5 0%, transparent 50%),
+      var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    padding:2rem 1.25rem 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:2rem;}
+  .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.66rem;font-weight:600;color:var(--blue);margin-bottom:1.1rem;
+  }
+  .han{
+    font-size:1.5rem;color:var(--indigo);letter-spacing:.18em;
+    margin-bottom:.55rem;font-weight:400;
+  }
+  h1{font-size:clamp(2.4rem,8vw,3.6rem);font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--indigo);}
+  h1 em{font-style:italic;color:var(--blue);}
+  .tagline{margin:1.1rem auto 0;max-width:44ch;color:var(--muted);font-size:1.02rem;}
+  .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.6rem;}
+  .chip{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;
+    background:var(--blush);color:var(--indigo);border:1px solid var(--line);
+    border-radius:999px;padding:.4rem .85rem;
+  }
+
+  /* serving control */
+  .servings{
+    display:flex;align-items:center;justify-content:center;gap:1rem;
+    margin:1.8rem auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:.85rem 1.1rem;max-width:320px;
+    box-shadow:0 6px 20px -14px rgba(44,32,101,.5);
+  }
+  .servings .label{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .servings .count{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;
+    font-size:1.15rem;color:var(--indigo);min-width:5.5rem;text-align:center;
+  }
+  .servings button{
+    width:2.3rem;height:2.3rem;border-radius:50%;border:none;cursor:pointer;
+    background:var(--blue);color:#fff;font-size:1.3rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .12s ease,background .12s ease;
+  }
+  .servings button:hover{background:var(--indigo);}
+  .servings button:active{transform:scale(.9);}
+  .servings button:disabled{background:var(--line);cursor:not-allowed;}
+  .servings button:focus-visible{outline:3px solid var(--berry);outline-offset:2px;}
+
+  section{margin-top:2.6rem;}
+  .section-head{display:flex;align-items:baseline;gap:.8rem;border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:1.3rem;}
+  .section-head h2{font-size:1.4rem;font-weight:400;color:var(--berry);}
+  .section-head .num{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--blue);}
+
+  ul.ingredients{list-style:none;}
+  ul.ingredients li{display:flex;align-items:baseline;gap:.6rem;padding:.55rem 0;border-bottom:1px dotted var(--line);}
+  ul.ingredients li:last-child{border-bottom:none;}
+  .amt{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:.92rem;color:var(--blue);min-width:5.5rem;}
+  .opt{color:var(--muted);font-style:italic;font-size:.86rem;}
+
+  ol.steps{list-style:none;counter-reset:step;}
+  ol.steps li{counter-increment:step;position:relative;padding:0 0 1.5rem 3.2rem;}
+  ol.steps li::before{
+    content:counter(step,decimal-leading-zero);position:absolute;left:0;top:-.1rem;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.05em;
+    color:#fff;background:var(--blue);width:2.1rem;height:2.1rem;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:1.05rem;top:2.2rem;bottom:.2rem;width:1px;background:var(--line);}
+  .step-title{font-weight:700;color:var(--indigo);display:block;margin-bottom:.15rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.95rem;letter-spacing:.01em;}
+  .step-body{color:var(--ink);}
+  .step-body strong{color:var(--indigo);}
+
+  /* timer widget */
+  .timer{
+    margin-top:.7rem;display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+    background:var(--frost);border:1px solid #d3d8ec;border-radius:12px;padding:.5rem .65rem;
+  }
+  .timer.done{background:#e7f6ec;border-color:#bfe6c9;}
+  .timer-display{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
+    font-weight:700;font-size:1.05rem;color:var(--berry);min-width:5.2rem;text-align:center;letter-spacing:.02em;
+  }
+  .timer.done .timer-display{color:#1d7a3c;}
+  .timer-hint{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:.1rem;}
+  .timer button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.03em;
+    border:none;cursor:pointer;border-radius:8px;padding:.4rem .7rem;background:var(--berry);color:#fff;
+    transition:background .12s ease,transform .1s ease;
+  }
+  .timer button.ghost{background:transparent;color:var(--berry);border:1px solid #d3d8ec;}
+  .timer button:hover{filter:brightness(1.08);}
+  .timer button:active{transform:scale(.94);}
+  .timer button:focus-visible{outline:3px solid var(--berry);outline-offset:2px;}
+  .timer .presets{display:inline-flex;gap:.3rem;}
+  .timer .presets button{background:transparent;color:var(--muted);border:1px solid var(--line);padding:.3rem .55rem;}
+  .timer .presets button.active{background:var(--berry);color:#fff;border-color:var(--berry);}
+
+  .notes{margin-top:2.8rem;background:linear-gradient(180deg,var(--blush),#fff);border:1px solid var(--line);border-radius:14px;padding:1.5rem 1.6rem;}
+  .notes h2{font-size:1.05rem;color:var(--indigo);font-weight:700;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;margin-bottom:.7rem;}
+  .notes ul{list-style:none;}
+  .notes li{position:relative;padding-left:1.3rem;margin-bottom:.6rem;color:var(--ink);font-size:.96rem;}
+  .notes li::before{content:"\2022";position:absolute;left:.2rem;top:-.05rem;color:var(--blue);font-size:1.2rem;}
+  .notes li:last-child{margin-bottom:0;}
+
+  footer{text-align:center;margin-top:3rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  @media (prefers-reduced-motion:no-preference){
+    .wrap{animation:rise .6s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  }
+  @media print{
+    body{background:#fff;}
+    .timer button,.servings button{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Cold Brew &middot; Tart Berry Tisane</div>
+    <div class="han">蓝莓乳酪</div>
+    <h1>Blueberry&nbsp;Cheese <em>Cold&nbsp;Brew</em></h1>
+    <p class="tagline">A deep blue-purple, tart-sweet berry infusion of hibiscus and blackcurrant with blueberry and apple — slow-steeped cold in a 1L pitcher and strained over ice. (No dairy — "cheese" is just the mellow, creamy flavour name.)</p>
+    <div class="meta">
+      <span class="chip">1L pitcher or jar</span>
+      <span class="chip">6–12 h steep</span>
+      <span class="chip">Caffeine-free</span>
+      <span class="chip">Best served cold</span>
+    </div>
+
+    <div class="servings" aria-label="Adjust batch size">
+      <button id="minus" aria-label="Fewer glasses">&minus;</button>
+      <div>
+        <div class="count"><span id="count">4</span> glasses</div>
+        <div class="label">Batch size</div>
+      </div>
+      <button id="plus" aria-label="More glasses">+</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head"><span class="num">01</span><h2>Ingredients</h2></div>
+    <ul class="ingredients" id="ingredients"></ul>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="num">02</span><h2>Method</h2></div>
+    <ol class="steps">
+      <li>
+        <span class="step-title">Add the tea</span>
+        <span class="step-body">Add the Blueberry Cheese tea straight into your pitcher or jar. Break up any large dried fruit or apple pieces so they soak evenly.</span>
+      </li>
+      <li>
+        <span class="step-title">Add the apple and blueberries</span>
+        <span class="step-body">Slice the apple thin (skin on, washed) and add to the bottle along with the fresh blueberries. Lightly press a few blueberries against the side to release their juice and deepen the colour.</span>
+      </li>
+      <li>
+        <span class="step-title">Fill with cold water</span>
+        <span class="step-body">Pour in <strong>1L</strong> of cold filtered water. The tea, flowers, and fruit will float and steep freely in the water.</span>
+      </li>
+      <li>
+        <span class="step-title">Swirl, cap, and chill</span>
+        <span class="step-body">Give it a gentle swirl so everything is wetted, cover with a lid, and refrigerate. This blend is hibiscus- and blackcurrant-heavy, so it runs tart: 6 hours gives a brighter, lighter cup; overnight gives a fuller, deeper, more sour one. Swirl once midway to keep the fruit submerged.</span>
+        <div class="timer" data-seconds="28800">
+          <span class="timer-hint">Steep</span>
+          <span class="presets" role="group" aria-label="Steep length">
+            <button data-h="6">6h</button>
+            <button data-h="8" class="active">8h</button>
+            <button data-h="10">10h</button>
+            <button data-h="12">12h</button>
+          </span>
+          <span class="timer-display">8:00:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Add the lemon near the end (optional)</span>
+        <span class="step-body">If using lemon, add the thin slices in the last 2–3 hours of steeping so the peel doesn't turn bitter over the full brew. It brightens the hibiscus and lifts the blueberry.</span>
+        <div class="timer" data-seconds="9000">
+          <span class="timer-hint">Lemon in</span>
+          <span class="timer-display">2:30:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Sweeten to taste (optional)</span>
+        <span class="step-body">Taste first — but this blend is properly tart, so it usually wants a little sweetening. Dissolve <strong>rock sugar or honey</strong> in a splash of warm water to make a syrup, cool it, then stir it in (cold liquid won't dissolve either one well). Or sweeten by the glass so the batch keeps longer.</span>
+      </li>
+      <li>
+        <span class="step-title">Pour and serve</span>
+        <span class="step-body">Strain through a fine sieve into a glass of ice. The sieve holds back the berries and petals for a clean, deep blue-purple cup.</span>
+      </li>
+    </ol>
+  </section>
+
+  <div class="notes">
+    <h2>Good to know</h2>
+    <ul>
+      <li>The "乳酪 / cheese" in the name is a flavour cue, not an ingredient — there's no dairy in the blend. If you want to play up the creamy name, stir a splash of cold milk or a spoonful of yogurt into your <em>glass</em> — never into the batch, since dairy will curdle in the acidic hibiscus brew as it sits.</li>
+      <li>Hibiscus (洛神花) plus blackcurrant (黑加仑) makes this the tart one. Plan on sweetening, and lean to the 6-hour steep if you're sour-sensitive.</li>
+      <li>Muddled blueberries will make it slightly cloudy and stain the brew a gorgeous deep purple; it still tastes great.</li>
+      <li>The apple and lemon both soften the tart edge nicely — taste before adding extra sugar.</li>
+      <li>With fresh fruit in it, drink within <strong>1–2 days</strong> and give it a sniff before drinking on day 2.</li>
+    </ul>
+  </div>
+
+  <footer>Brewed in a 1L pitcher · 蓝莓乳酪 · Best served cold</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Ingredient scaling ---------- */
+  var BASE = 4;            // base batch = 4 glasses (1 litre)
+  var MIN = 1, MAX = 16;
+  var servings = BASE;
+
+  var ingredients = [
+    {key:"tea",    name:"Blueberry Cheese fruit tea (蓝莓乳酪)", amount:10,    unit:"g",   mode:"half"},
+    {key:"water",  name:"cold filtered water",                  amount:1000,  unit:"ml",  mode:"water"},
+    {key:"blue",   name:"fresh blueberries",                    amount:0.333, unit:"cup", mode:"frac"},
+    {key:"apple",  name:"apple — Fuji, Gala, or Pink Lady — thinly sliced", amount:0.5, unit:"", mode:"frac"},
+    {key:"lemon",  name:"lemon, thinly sliced — added in the last few hours", amount:0.25, unit:"", mode:"frac", optional:true},
+    {key:"sugar",  name:"rock sugar or honey", amount:2.5, unit:"tsp", mode:"frac", optional:true}
+  ];
+
+  var FRACS = [[0.125,"⅛"],[0.25,"¼"],[0.333,"⅓"],[0.375,"⅜"],[0.5,"½"],[0.625,"⅝"],[0.667,"⅔"],[0.75,"¾"],[0.875,"⅞"]];
+
+  function trim(n){
+    n = Math.round(n*100)/100;
+    return (n % 1 === 0) ? String(n) : String(n);
+  }
+
+  function asFraction(v){
+    var whole = Math.floor(v + 0.0001);
+    var frac = v - whole;
+    if(frac < 0.06) return String(whole);
+    var best=null, bestD=0.07;
+    for(var i=0;i<FRACS.length;i++){
+      var d=Math.abs(frac-FRACS[i][0]);
+      if(d<bestD){bestD=d;best=FRACS[i][1];}
+    }
+    if(best) return (whole>0 ? whole+" " : "") + best;
+    return trim(v);
+  }
+
+  function format(item, factor){
+    var v = item.amount * factor;
+    if(item.mode === "water"){
+      if(v >= 1000){ return trim(Math.round(v/100)/10) + " L"; }
+      return Math.round(v) + " ml";
+    }
+    if(item.mode === "half"){
+      var r = Math.round(v*2)/2;
+      return trim(r) + (item.unit ? " " + item.unit : "");
+    }
+    return asFraction(v) + (item.unit ? " " + item.unit : "");
+  }
+
+  function renderIngredients(){
+    var factor = servings / BASE;
+    var html = "";
+    for(var i=0;i<ingredients.length;i++){
+      var it = ingredients[i];
+      var name = it.name + (it.optional ? ' <span class="opt">(optional)</span>' : '');
+      html += '<li><span class="amt">' + format(it, factor) + '</span><span>' + name + '</span></li>';
+    }
+    document.getElementById("ingredients").innerHTML = html;
+    document.getElementById("count").textContent = servings;
+  }
+
+  function setServings(n){
+    servings = Math.max(MIN, Math.min(MAX, n));
+    document.getElementById("minus").disabled = (servings <= MIN);
+    document.getElementById("plus").disabled = (servings >= MAX);
+    renderIngredients();
+  }
+
+  document.getElementById("minus").addEventListener("click", function(){ setServings(servings-1); });
+  document.getElementById("plus").addEventListener("click", function(){ setServings(servings+1); });
+  setServings(BASE);
+
+  /* ---------- Countdown timers ---------- */
+  function fmtTime(s){
+    s = Math.max(0, Math.round(s));
+    var h = Math.floor(s/3600);
+    var m = Math.floor((s%3600)/60);
+    var sec = s%60;
+    var pad = function(x){ return (x<10?"0":"")+x; };
+    return (h>0 ? h+":"+pad(m) : m) + ":" + pad(sec);
+  }
+
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      var ctx = new Ctx();
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = "sine"; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.1);
+      o.start(); o.stop(ctx.currentTime+1.15);
+    }catch(e){}
+  }
+
+  function initTimer(el){
+    var total = parseInt(el.getAttribute("data-seconds"),10);
+    var remaining = total;
+    var endAt = 0, raf = null, running = false;
+    var display = el.querySelector(".timer-display");
+    var startBtn = el.querySelector(".t-start");
+    var resetBtn = el.querySelector(".t-reset");
+    var presets = el.querySelectorAll(".presets button");
+
+    function paint(){ display.textContent = fmtTime(remaining); }
+
+    function stopLoop(){ if(raf){ clearInterval(raf); raf = null; } }
+
+    function tick(){
+      remaining = (endAt - Date.now())/1000;
+      if(remaining <= 0){
+        remaining = 0; paint();
+        running = false; stopLoop();
+        startBtn.textContent = "Start";
+        el.classList.add("done");
+        display.textContent = "Done!";
+        beep();
+        return;
+      }
+      paint();
+    }
+
+    function start(){
+      if(running) return;
+      if(remaining <= 0) remaining = total;
+      el.classList.remove("done");
+      endAt = Date.now() + remaining*1000;
+      running = true;
+      startBtn.textContent = "Pause";
+      raf = setInterval(tick, 250);
+    }
+    function pause(){
+      if(!running) return;
+      running = false; stopLoop();
+      startBtn.textContent = "Resume";
+    }
+    function reset(){
+      running = false; stopLoop();
+      remaining = total;
+      el.classList.remove("done");
+      startBtn.textContent = "Start";
+      paint();
+    }
+
+    startBtn.addEventListener("click", function(){ running ? pause() : start(); });
+    resetBtn.addEventListener("click", reset);
+
+    for(var i=0;i<presets.length;i++){
+      presets[i].addEventListener("click", function(){
+        for(var j=0;j<presets.length;j++) presets[j].classList.remove("active");
+        this.classList.add("active");
+        total = parseInt(this.getAttribute("data-h"),10) * 3600;
+        reset();
+      });
+    }
+
+    paint();
+  }
+
+  var timers = document.querySelectorAll(".timer");
+  for(var i=0;i<timers.length;i++) initTimer(timers[i]);
+})();
+</script>
+</body>
+</html>

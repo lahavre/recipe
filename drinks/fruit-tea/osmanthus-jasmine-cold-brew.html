@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osmanthus Jasmine Cold Brew</title>
+<style>
+  :root{
+    --ink:#3a2f1c;
+    --bark:#6b4e1f;
+    --gold:#b8860b;
+    --amber:#cf9b3d;
+    --honey:#f3e3b8;
+    --cream:#fbf6e9;
+    --jade:#5c7a5a;
+    --line:#e6d6ad;
+    --muted:#8a7752;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:
+      radial-gradient(120% 80% at 82% -10%, #fdf1cf 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #eef1e4 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+    padding:2rem 1.25rem 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:2rem;}
+  .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.66rem;font-weight:600;color:var(--gold);margin-bottom:1.1rem;
+  }
+  .han{
+    font-size:1.5rem;color:var(--bark);letter-spacing:.18em;
+    margin-bottom:.55rem;font-weight:400;
+  }
+  h1{font-size:clamp(2.3rem,8vw,3.5rem);font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--bark);}
+  h1 em{font-style:italic;color:var(--amber);}
+  .tagline{margin:1.1rem auto 0;max-width:44ch;color:var(--muted);font-size:1.02rem;}
+  .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.6rem;}
+  .chip{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;
+    background:var(--honey);color:var(--bark);border:1px solid var(--line);
+    border-radius:999px;padding:.4rem .85rem;
+  }
+
+  /* serving control */
+  .servings{
+    display:flex;align-items:center;justify-content:center;gap:1rem;
+    margin:2rem auto 0;padding:.85rem 1.1rem;width:fit-content;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 1px 0 rgba(184,134,11,.06);
+  }
+  .servings .lbl{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);}
+  .servings button{
+    width:34px;height:34px;border-radius:9px;border:1px solid var(--line);
+    background:var(--cream);color:var(--bark);font-size:1.25rem;line-height:1;
+    cursor:pointer;transition:.15s;
+  }
+  .servings button:hover{background:var(--honey);}
+  .servings button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  .servings .count{font-size:1.15rem;color:var(--bark);min-width:5.5rem;text-align:center;}
+  .servings .count b{font-weight:600;}
+
+  section{margin-top:2.6rem;}
+  h2{
+    font-family:"Helvetica Neue",Arial,sans-serif;text-transform:uppercase;
+    letter-spacing:.2em;font-size:.74rem;font-weight:600;color:var(--gold);
+    padding-bottom:.55rem;margin-bottom:1.1rem;border-bottom:1px solid var(--line);
+  }
+
+  ul.ingredients{list-style:none;}
+  ul.ingredients li{
+    display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
+    padding:.6rem 0;border-bottom:1px dotted var(--line);
+  }
+  ul.ingredients li:last-child{border-bottom:none;}
+  .ing-name{color:var(--ink);}
+  .ing-name small{display:block;color:var(--muted);font-size:.82rem;font-style:italic;}
+  .ing-amt{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.92rem;font-weight:600;color:var(--bark);white-space:nowrap;}
+  .opt{font-size:.7rem;font-style:normal;color:var(--jade);text-transform:uppercase;letter-spacing:.1em;}
+
+  ol.steps{list-style:none;counter-reset:step;}
+  ol.steps li{
+    position:relative;padding:0 0 1.5rem 3.1rem;counter-increment:step;
+  }
+  ol.steps li::before{
+    content:counter(step);position:absolute;left:0;top:-.1rem;
+    width:2.1rem;height:2.1rem;border-radius:50%;
+    background:var(--bark);color:var(--cream);
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.95rem;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li::after{
+    content:"";position:absolute;left:1.05rem;top:2.1rem;bottom:.2rem;width:1px;
+    background:var(--line);
+  }
+  ol.steps li:last-child::after{display:none;}
+  .step-title{display:block;font-size:1.12rem;color:var(--bark);margin-bottom:.2rem;}
+  .step-body{color:var(--ink);}
+  .step-body b{color:var(--bark);}
+
+  /* timer */
+  .timer{
+    margin-top:.9rem;padding:.9rem 1rem;background:#fff;
+    border:1px solid var(--line);border-radius:12px;
+  }
+  .timer .presets{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem;}
+  .timer .presets button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.74rem;letter-spacing:.04em;
+    padding:.32rem .7rem;border-radius:999px;border:1px solid var(--line);
+    background:var(--cream);color:var(--bark);cursor:pointer;transition:.15s;
+  }
+  .timer .presets button:hover{background:var(--honey);}
+  .timer .presets button.active{background:var(--bark);color:var(--cream);border-color:var(--bark);}
+  .timer .presets button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  .timer .display{display:flex;align-items:center;gap:.9rem;}
+  .timer .clock{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
+    font-size:1.7rem;font-weight:600;color:var(--bark);letter-spacing:.02em;min-width:7.2rem;
+  }
+  .timer .ctrl{display:flex;gap:.45rem;}
+  .timer .ctrl button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.8rem;
+    padding:.4rem .9rem;border-radius:8px;border:1px solid var(--line);
+    background:var(--cream);color:var(--bark);cursor:pointer;transition:.15s;
+  }
+  .timer .ctrl button:hover{background:var(--honey);}
+  .timer .ctrl button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+  .timer.done{background:#eef4ea;border-color:var(--jade);}
+  .timer.done .clock{color:var(--jade);}
+
+  .notes{margin-top:2.6rem;background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.4rem 1.5rem;}
+  .notes h2{border:none;padding:0;margin-bottom:.9rem;}
+  .notes ul{list-style:none;}
+  .notes li{position:relative;padding-left:1.3rem;margin-bottom:.6rem;color:var(--ink);font-size:.96rem;}
+  .notes li:last-child{margin-bottom:0;}
+  .notes li::before{content:"✦";position:absolute;left:0;color:var(--amber);font-size:.8rem;top:.18rem;}
+
+  footer{margin-top:2.8rem;text-align:center;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  @media (max-width:480px){
+    ol.steps li{padding-left:2.7rem;}
+    .timer .display{flex-wrap:wrap;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+  @media print{
+    body{background:#fff;}
+    .timer .ctrl,.servings button{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Cold Brew · Floral Fruit Tisane</div>
+    <div class="han">桂花茉莉</div>
+    <h1>Osmanthus <em>Jasmine</em> Cold Brew</h1>
+    <p class="tagline">A soft, golden floral-fruit infusion of apricot-sweet osmanthus and jasmine over dried tropical fruit and rose — slow-steeped cold in a 1L pitcher and strained over ice.</p>
+    <div class="meta">
+      <span class="chip">1L pitcher or jar</span>
+      <span class="chip">6–12 h steep</span>
+      <span class="chip">Caffeine-free</span>
+      <span class="chip">Best served cold</span>
+    </div>
+
+    <div class="servings" role="group" aria-label="Batch size">
+      <span class="lbl">Batch</span>
+      <button id="minus" aria-label="Fewer glasses">−</button>
+      <span class="count"><b id="svCount">4</b> glasses<br><small id="svVol">1 L</small></span>
+      <button id="plus" aria-label="More glasses">+</button>
+    </div>
+  </header>
+
+  <section>
+    <h2>Ingredients</h2>
+    <ul class="ingredients" id="ingList"></ul>
+  </section>
+
+  <section>
+    <h2>Method</h2>
+    <ol class="steps">
+      <li>
+        <span class="step-title">Add the tea</span>
+        <span class="step-body">Add the osmanthus jasmine tea straight into your pitcher or jar. Break up any large dried fruit chunks so they soak evenly.</span>
+      </li>
+      <li>
+        <span class="step-title">Add the fresh fruit</span>
+        <span class="step-body">Slice about <b>half an apple</b> into 6–8 thin slices (skin on, washed) and drop them in. Add a few thin lemon slices too if you'd like a brighter lift — it also keeps the apple from browning.</span>
+      </li>
+      <li>
+        <span class="step-title">Fill with cold water</span>
+        <span class="step-body">Pour in <b>1L</b> of cold filtered water. The tea, flowers, and fruit will float and steep freely in the water.</span>
+      </li>
+      <li>
+        <span class="step-title">Swirl, cap, and chill</span>
+        <span class="step-body">Give it a gentle swirl so everything is wetted, cover with a lid, and refrigerate. 6 hours gives a light, delicate cup; overnight gives a fuller, sweeter one. Swirl once midway so any floating apple stays submerged.</span>
+        <div class="timer" data-h="8">
+          <div class="presets">
+            <button data-h="6">6 h</button>
+            <button data-h="8" class="active">8 h</button>
+            <button data-h="10">10 h</button>
+            <button data-h="12">12 h</button>
+          </div>
+          <div class="display">
+            <span class="clock">08:00:00</span>
+            <span class="ctrl">
+              <button class="start">Start</button>
+              <button class="reset">Reset</button>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Sweeten to taste (optional)</span>
+        <span class="step-body">Taste first — between the dried fruit and apple it may not need anything. If you'd like it sweeter, dissolve <b>1–2 tsp honey or rock sugar</b> in a splash of warm water to make a syrup, then stir it in. Adding it dry to cold liquid just sinks and clumps.</span>
+      </li>
+      <li>
+        <span class="step-title">Pour and serve</span>
+        <span class="step-body">Strain through a fine sieve into a glass of ice. The sieve holds back the fruit and petals for a clean, golden cup.</span>
+      </li>
+    </ol>
+  </section>
+
+  <div class="notes">
+    <h2>Good to know</h2>
+    <ul>
+      <li>Straining only happens <em>when you pour</em> — all the steeping happens loose in the pitcher.</li>
+      <li>Unlike real tea leaves, this fruit-and-flower blend won't turn bitter if it sits, just gradually fuller. To stop it, strain the whole batch into another container.</li>
+      <li>With fresh apple in it, drink within <b>1–2 days</b> and give it a sniff before drinking on day 2.</li>
+      <li>Half an apple (6–8 thin slices) is right for 1L — enough to round out the cup without burying the delicate osmanthus and jasmine.</li>
+      <li>Rock sugar is cleaner and more neutral; honey adds its own floral warmth. Either way, make it a syrup first.</li>
+    </ul>
+  </div>
+
+  <footer>Brewed in a 1L pitcher · 桂花茉莉 · Best served cold</footer>
+</div>
+
+<script>
+(function(){
+  // ---- Ingredients (base = 4 glasses / 1L) ----
+  var base = 4;
+  var ingredients = [
+    {name:"Osmanthus jasmine fruit tea", sub:"桂花茉莉", amount:10, unit:"g"},
+    {name:"Cold filtered water", sub:"", amount:1000, unit:"ml"},
+    {name:"Apple, thinly sliced", sub:"Fuji, Gala, or Pink Lady — skin on", amount:0.5, unit:""},
+    {name:"Lemon, thinly sliced", sub:"for brightness — keeps apple fresh", amount:0.25, unit:"", opt:true},
+    {name:"Honey or rock sugar", sub:"made into a syrup", amount:2, unit:"tsp", opt:true}
+  ];
+
+  function fmtFraction(n){
+    var whole = Math.floor(n);
+    var frac = n - whole;
+    var map = [[0,""],[0.25,"¼"],[0.33,"⅓"],[0.5,"½"],[0.67,"⅔"],[0.75,"¾"]];
+    var best = map[0], diff = 1;
+    for(var i=0;i<map.length;i++){
+      var d = Math.abs(frac - map[i][0]);
+      if(d < diff){diff = d; best = map[i];}
+    }
+    var fs = best[1];
+    if(whole === 0 && fs === "") return "0";
+    if(whole === 0) return fs;
+    if(fs === "") return String(whole);
+    return whole + fs;
+  }
+
+  function fmtAmount(ing, mult){
+    var v = ing.amount * mult;
+    if(ing.unit === "ml"){
+      if(v >= 1000){
+        var l = v / 1000;
+        return (Math.round(l*100)/100).toString().replace(/\.00$/,"").replace(/(\.\d)0$/,"$1") + " L";
+      }
+      return Math.round(v) + " ml";
+    }
+    if(ing.unit === "g") return (Math.round(v*10)/10).toString().replace(/\.0$/,"") + " g";
+    if(ing.unit === "tsp"){
+      var t = Math.round(v*2)/2;
+      return t.toString().replace(/\.0$/,"") + " tsp";
+    }
+    // countable (apple, lemon)
+    return fmtFraction(v);
+  }
+
+  var list = document.getElementById("ingList");
+  function renderIngredients(mult){
+    list.innerHTML = "";
+    ingredients.forEach(function(ing){
+      var li = document.createElement("li");
+      var name = document.createElement("span");
+      name.className = "ing-name";
+      var optTag = ing.opt ? ' <span class="opt">optional</span>' : "";
+      name.innerHTML = ing.name + optTag + (ing.sub ? "<small>"+ing.sub+"</small>" : "");
+      var amt = document.createElement("span");
+      amt.className = "ing-amt";
+      amt.textContent = fmtAmount(ing, mult);
+      li.appendChild(name);
+      li.appendChild(amt);
+      list.appendChild(li);
+    });
+  }
+
+  // ---- Servings control ----
+  var count = base;
+  var svCount = document.getElementById("svCount");
+  var svVol = document.getElementById("svVol");
+  function updateServings(){
+    svCount.textContent = count;
+    var litres = (count/base);
+    svVol.textContent = (Math.round(litres*100)/100).toString().replace(/\.00$/,"").replace(/(\.\d)0$/,"$1") + " L";
+    renderIngredients(count/base);
+  }
+  document.getElementById("plus").addEventListener("click", function(){
+    if(count < 12){count += 2; updateServings();}
+  });
+  document.getElementById("minus").addEventListener("click", function(){
+    if(count > 2){count -= 2; updateServings();}
+  });
+  updateServings();
+
+  // ---- Steep timer ----
+  function initTimer(el){
+    var total = parseInt(el.getAttribute("data-h"),10) * 3600;
+    var remaining = total;
+    var running = false, endAt = 0, loop = null;
+    var clock = el.querySelector(".clock");
+    var startBtn = el.querySelector(".start");
+    var resetBtn = el.querySelector(".reset");
+    var presets = el.querySelectorAll(".presets button");
+
+    function pad(n){return (n<10?"0":"")+n;}
+    function paint(){
+      var s = Math.max(0, Math.round(remaining));
+      var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+      clock.textContent = pad(h)+":"+pad(m)+":"+pad(sec);
+    }
+    function beep(){
+      try{
+        var ctx = new (window.AudioContext||window.webkitAudioContext)();
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 660; o.type = "sine";
+        g.gain.setValueAtTime(0.001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime+0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.9);
+        o.start(); o.stop(ctx.currentTime+0.95);
+      }catch(e){}
+    }
+    function stopLoop(){if(loop){clearInterval(loop);loop=null;}}
+    function tick(){
+      remaining = (endAt - Date.now())/1000;
+      if(remaining <= 0){
+        remaining = 0; running = false; stopLoop();
+        paint();
+        el.classList.add("done");
+        startBtn.textContent = "Done";
+        beep();
+        return;
+      }
+      paint();
+    }
+    function start(){
+      if(running) return;
+      if(remaining <= 0) remaining = total;
+      el.classList.remove("done");
+      endAt = Date.now() + remaining*1000;
+      running = true;
+      startBtn.textContent = "Pause";
+      loop = setInterval(tick, 250);
+    }
+    function pause(){
+      if(!running) return;
+      running = false; stopLoop();
+      startBtn.textContent = "Resume";
+    }
+    function reset(){
+      running = false; stopLoop();
+      remaining = total;
+      el.classList.remove("done");
+      startBtn.textContent = "Start";
+      paint();
+    }
+    startBtn.addEventListener("click", function(){ running ? pause() : start(); });
+    resetBtn.addEventListener("click", reset);
+    for(var i=0;i<presets.length;i++){
+      presets[i].addEventListener("click", function(){
+        for(var j=0;j<presets.length;j++) presets[j].classList.remove("active");
+        this.classList.add("active");
+        total = parseInt(this.getAttribute("data-h"),10) * 3600;
+        reset();
+      });
+    }
+    paint();
+  }
+  var timers = document.querySelectorAll(".timer");
+  for(var i=0;i<timers.length;i++) initTimer(timers[i]);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mushroom Alfredo Spaghetti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #2a241d;
+    --muted: #6b6055;
+    --line: #ddd3c5;
+    --paper: #faf7f1;
+    --accent: #7a3e2f;
+    --cream: #f1ebe0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+
+  .card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  header {
+    padding: 2.75rem 2.75rem 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .tagline {
+    margin-top: 0.85rem;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 46ch;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .meta div { font-size: 0.85rem; }
+  .meta .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .meta .value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    margin-top: 0.15rem;
+  }
+
+  /* Servings control */
+  .servings {
+    padding: 1.5rem 2.75rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .servings .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .stepper button {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: #fff;
+    color: var(--accent);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .stepper button:hover { background: var(--accent); color: #fff; }
+  .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .stepper .count {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    min-width: 2.5rem;
+    text-align: center;
+  }
+  .servings input[type=range] {
+    flex: 1;
+    min-width: 140px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 0;
+  }
+
+  .ingredients {
+    padding: 2.25rem 2rem 2.25rem 2.75rem;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+  }
+
+  .method { padding: 2.25rem 2.75rem 2.25rem 2.25rem; }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.25rem;
+    color: var(--accent);
+  }
+
+  ul.ing { list-style: none; }
+  ul.ing li {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  ul.ing li:last-child { border-bottom: none; }
+  ul.ing .amt { font-weight: 600; white-space: nowrap; min-width: 4.6rem; color: var(--accent); }
+
+  ol.steps { list-style: none; counter-reset: step; }
+  ol.steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 0 0 1.4rem 2.6rem;
+    font-size: 0.96rem;
+  }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ol.steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -0.1rem;
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  ol.steps .step-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Timer */
+  .timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    padding: 0.3rem 0.3rem 0.3rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--paper);
+    font-size: 0.85rem;
+  }
+  .timer.done { border-color: var(--accent); background: #f6e9e3; }
+  .timer .time {
+    font-family: 'Fraunces', serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 3.4rem;
+  }
+  .timer button {
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .timer button.ghost {
+    background: transparent;
+    color: var(--muted);
+    padding: 0.3rem 0.5rem;
+  }
+
+  .notes {
+    padding: 1.75rem 2.75rem 2.5rem;
+    border-top: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .notes h2 { margin-bottom: 0.6rem; }
+  .notes p { font-size: 0.9rem; color: var(--muted); }
+
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 620px) {
+    body { padding: 1.25rem 0.75rem; }
+    header { padding: 1.75rem 1.5rem 1.5rem; }
+    .servings { padding: 1.25rem 1.5rem; }
+    .body { grid-template-columns: 1fr; }
+    .ingredients { border-right: none; border-bottom: 1px solid var(--line); padding: 1.75rem 1.5rem; }
+    .method { padding: 1.75rem 1.5rem; }
+    .notes { padding: 1.5rem; }
+  }
+
+  @media print {
+    body { padding: 0; background: #fff; }
+    .card { border: none; border-radius: 0; max-width: none; }
+    .ingredients, .notes, .servings { background: #fff; }
+    .servings input[type=range], .stepper button { display: none; }
+    .timer button { display: none; }
+    footer { display: none; }
+    ol.steps li::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <div class="eyebrow">Pasta &middot; 25 minutes</div>
+      <h1>Mushroom Alfredo Spaghetti</h1>
+      <p class="tagline">Creamy garlic parmesan alfredo sauce with sautéed mushrooms tossed through spaghetti.</p>
+      <div class="meta">
+        <div><div class="label">Prep</div><div class="value">10 min</div></div>
+        <div><div class="label">Cook</div><div class="value">15 min</div></div>
+      </div>
+    </header>
+
+    <div class="servings">
+      <span class="label">Servings</span>
+      <div class="stepper">
+        <button id="minus" aria-label="Fewer servings">&minus;</button>
+        <span class="count" id="count">4</span>
+        <button id="plus" aria-label="More servings">+</button>
+      </div>
+      <input type="range" id="slider" min="1" max="12" value="4" step="1">
+    </div>
+
+    <div class="body">
+      <div class="ingredients">
+        <h2>Ingredients</h2>
+        <ul class="ing" id="ing-list"></ul>
+      </div>
+
+      <div class="method">
+        <h2>Method</h2>
+        <ol class="steps" id="steps-list"></ol>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h2>Notes</h2>
+      <p>Brown the mushrooms well before adding garlic — crowding the pan steams them instead. For extra depth, deglaze with a splash of white wine after the garlic. Add cooked chicken or crispy bacon to make it heartier. A sweated shallot or half an onion before the garlic adds gentle depth if you'd like it.</p>
+    </div>
+  </div>
+
+  <footer>Tip: use your browser's Print option to save as PDF or print a clean copy.</footer>
+
+<script>
+  const BASE = 4;
+
+  // value = base amount; unit null means countable; some are "fixed" (don't scale aggressively e.g. seasoning) but we'll scale all proportionally
+  const ingredients = [
+    { amt: 400, unit: 'g',     name: 'spaghetti' },
+    { amt: 300, unit: 'g',     name: 'cremini or button mushrooms, sliced' },
+    { amt: 4,   unit: 'tbsp',  name: 'unsalted butter' },
+    { amt: 1,   unit: 'tbsp',  name: 'olive oil' },
+    { amt: 3,   unit: null,    name: 'garlic cloves, minced' },
+    { amt: 360, unit: 'ml',    name: 'heavy cream' },
+    { amt: 100, unit: 'g',     name: 'parmesan, finely grated' },
+    { amt: 1,   unit: 'tsp',   name: 'salt' },
+    { amt: 0.5, unit: 'tsp',   name: 'black pepper' },
+    { amt: 1,   unit: 'pinch', name: 'ground nutmeg' },
+    { amt: 2,   unit: 'tbsp',  name: 'fresh parsley, chopped' },
+  ];
+
+  const steps = [
+    { title: 'Boil the pasta', text: "Bring a large pot of salted water to a boil. Cook the spaghetti until al dente. Reserve about a cup of pasta water, then drain.", secs: 600 },
+    { title: 'Sauté the mushrooms', text: "Heat the olive oil and 1 tbsp butter in a large pan over medium-high heat. Add the mushrooms and cook undisturbed for a minute, then stir occasionally until golden and their liquid has evaporated.", secs: 420 },
+    { title: 'Add garlic', text: "Add the garlic and remaining butter. Cook until fragrant, stirring so the garlic doesn't burn.", secs: 60 },
+    { title: 'Make the sauce', text: "Pour in the cream and bring to a gentle simmer. Let it reduce slightly, then lower the heat and whisk in the parmesan until smooth. Season with salt, pepper, and nutmeg.", secs: 240 },
+    { title: 'Combine', text: "Add the drained spaghetti and toss to coat. Loosen with a splash of reserved pasta water if it's too thick.", secs: 60 },
+    { title: 'Serve', text: "Plate up and finish with parsley and extra parmesan.", secs: null },
+  ];
+
+  // ---- Ingredient scaling & pretty fractions ----
+  const FRACTIONS = [
+    [0.125, '⅛'], [0.25, '¼'], [0.333, '⅓'], [0.375, '⅜'],
+    [0.5, '½'], [0.625, '⅝'], [0.667, '⅔'], [0.75, '¾'], [0.875, '⅞'],
+  ];
+
+  function pretty(n) {
+    if (n >= 10) return Math.round(n).toString();
+    const whole = Math.floor(n);
+    let frac = n - whole;
+    // snap fraction to nearest known
+    let best = null, bestDiff = 1;
+    for (const [v, s] of FRACTIONS) {
+      const d = Math.abs(frac - v);
+      if (d < bestDiff) { bestDiff = d; best = [v, s]; }
+    }
+    if (frac < 0.0625) return whole.toString();          // ~0
+    if (frac > 0.9375) return (whole + 1).toString();    // ~1
+    if (best && bestDiff < 0.06) {
+      return whole > 0 ? whole + ' ' + best[1] : best[1];
+    }
+    // fallback: one decimal
+    return (Math.round(n * 10) / 10).toString();
+  }
+
+  function renderIngredients(servings) {
+    const mult = servings / BASE;
+    const html = ingredients.map(i => {
+      const scaled = i.amt * mult;
+      const amtStr = i.unit
+        ? pretty(scaled) + ' ' + i.unit
+        : pretty(scaled);
+      return '<li><span class="amt">' + amtStr + '</span><span>' + i.name + '</span></li>';
+    }).join('');
+    document.getElementById('ing-list').innerHTML = html;
+  }
+
+  // ---- Timers ----
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function beep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 660; o.type = 'sine';
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+      o.start(); o.stop(ctx.currentTime + 0.95);
+    } catch (e) {}
+  }
+
+  function makeTimer(secs) {
+    const wrap = document.createElement('div');
+    wrap.className = 'timer';
+    const time = document.createElement('span');
+    time.className = 'time';
+    time.textContent = fmt(secs);
+    const start = document.createElement('button');
+    start.textContent = 'Start';
+    const reset = document.createElement('button');
+    reset.className = 'ghost';
+    reset.textContent = 'Reset';
+    wrap.append(time, start, reset);
+
+    let remaining = secs, id = null, running = false;
+
+    function tick() {
+      remaining--;
+      time.textContent = fmt(remaining);
+      if (remaining <= 0) {
+        clearInterval(id); id = null; running = false;
+        wrap.classList.add('done');
+        time.textContent = 'Done';
+        start.textContent = 'Start';
+        beep();
+      }
+    }
+    start.addEventListener('click', () => {
+      if (running) {
+        clearInterval(id); running = false; start.textContent = 'Resume';
+      } else {
+        if (remaining <= 0) return;
+        running = true; start.textContent = 'Pause';
+        wrap.classList.remove('done');
+        id = setInterval(tick, 1000);
+      }
+    });
+    reset.addEventListener('click', () => {
+      clearInterval(id); id = null; running = false;
+      remaining = secs; time.textContent = fmt(secs);
+      start.textContent = 'Start'; wrap.classList.remove('done');
+    });
+    return wrap;
+  }
+
+  function renderSteps() {
+    const list = document.getElementById('steps-list');
+    steps.forEach(s => {
+      const li = document.createElement('li');
+      const title = document.createElement('span');
+      title.className = 'step-title';
+      title.textContent = s.title;
+      li.appendChild(title);
+      li.appendChild(document.createTextNode(s.text));
+      if (s.secs) {
+        li.appendChild(document.createElement('br'));
+        li.appendChild(makeTimer(s.secs));
+      }
+      list.appendChild(li);
+    });
+  }
+
+  // ---- Wire up servings controls ----
+  const slider = document.getElementById('slider');
+  const count = document.getElementById('count');
+  const minus = document.getElementById('minus');
+  const plus = document.getElementById('plus');
+
+  function setServings(v) {
+    v = Math.max(1, Math.min(12, v));
+    slider.value = v;
+    count.textContent = v;
+    minus.disabled = v <= 1;
+    plus.disabled = v >= 12;
+    renderIngredients(v);
+  }
+
+  slider.addEventListener('input', e => setServings(parseInt(e.target.value, 10)));
+  minus.addEventListener('click', () => setServings(parseInt(slider.value, 10) - 1));
+  plus.addEventListener('click', () => setServings(parseInt(slider.value, 10) + 1));
+
+  // init
+  setServings(4);
+  renderSteps();
+</script>
+</body>
+</html>

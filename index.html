@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Box</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Recipe Box</div>
+    <h1>Recipe Box</h1>
+    <p class="sub">A home-cooked collection of foods and drinks — pick a category to start browsing.</p>
+  </header>
+
+  <nav class="crumb"><span class="here">All categories</span></nav>
+
+  <main>
+    <section class="accordion">
+      <div class="acc-item" style="--accent:#b5502f">
+        <button class="acc-header" aria-expanded="false" aria-controls="panel-foods">
+          <span class="ch">🍽️</span>
+          <span class="label">
+            <h2>Foods</h2>
+            <span class="blurb">Western, Italian, Chinese and Japanese dishes.</span>
+          </span>
+          <span class="chevron">&#9662;</span>
+        </button>
+        <div class="acc-panel" id="panel-foods">
+          <div class="acc-panel-inner">
+            <a class="sub-link" href="foods/western/index.html"><span class="ch">🍔</span><span class="name">Western</span><span class="go">&rarr;</span></a>
+            <a class="sub-link" href="foods/italian/index.html"><span class="ch">🍝</span><span class="name">Italian</span><span class="go">&rarr;</span></a>
+            <a class="sub-link" href="foods/chinese/index.html"><span class="ch">🥢</span><span class="name">Chinese</span><span class="go">&rarr;</span></a>
+            <a class="sub-link" href="foods/japanese/index.html"><span class="ch">🍣</span><span class="name">Japanese</span><span class="go">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" style="--accent:#5c7a5a">
+        <button class="acc-header" aria-expanded="false" aria-controls="panel-drinks">
+          <span class="ch">🍵</span>
+          <span class="label">
+            <h2>Drinks</h2>
+            <span class="blurb">Fruit tea, tea and coffee recipes.</span>
+          </span>
+          <span class="chevron">&#9662;</span>
+        </button>
+        <div class="acc-panel" id="panel-drinks">
+          <div class="acc-panel-inner">
+            <a class="sub-link" href="drinks/fruit-tea/index.html"><span class="ch">🍓</span><span class="name">Fruit Tea</span><span class="go">&rarr;</span></a>
+            <a class="sub-link" href="drinks/tea/index.html"><span class="ch">🍵</span><span class="name">Tea</span><span class="go">&rarr;</span></a>
+            <a class="sub-link" href="drinks/coffee/index.html"><span class="ch">☕</span><span class="name">Coffee</span><span class="go">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Cook &middot; Brew &middot; Enjoy</footer>
+</div>
+
+<script>
+  document.querySelectorAll(".acc-header").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var item = btn.closest(".acc-item");
+      var open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+</script>
+</body>
+</html>

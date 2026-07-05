@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spaghetti Aglio e Olio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #2a241d;
+    --muted: #6b6055;
+    --line: #ddd3c5;
+    --paper: #faf7f1;
+    --accent: #7a3e2f;
+    --cream: #f1ebe0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+
+  .card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  header {
+    padding: 2.75rem 2.75rem 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .tagline {
+    margin-top: 0.85rem;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 46ch;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .meta div { font-size: 0.85rem; }
+  .meta .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .meta .value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    margin-top: 0.15rem;
+  }
+
+  /* Servings control */
+  .servings {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 2.75rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+  }
+  .servings .ctl-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .stepper button {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .stepper button:hover:not(:disabled) { background: var(--cream); border-color: var(--accent); }
+  .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .stepper .count {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    min-width: 1.6ch;
+    text-align: center;
+  }
+  input[type="range"] {
+    flex: 1;
+    min-width: 140px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  /* Body grid */
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 0;
+  }
+  @media (max-width: 640px) {
+    .body { grid-template-columns: 1fr; }
+    header, .servings { padding-left: 1.75rem; padding-right: 1.75rem; }
+  }
+
+  .ingredients {
+    padding: 2.25rem 2rem 2.25rem 2.75rem;
+    border-right: 1px solid var(--line);
+  }
+  .method {
+    padding: 2.25rem 2.75rem 2.25rem 2rem;
+  }
+  @media (max-width: 640px) {
+    .ingredients { border-right: none; border-bottom: 1px solid var(--line); padding: 2rem 1.75rem; }
+    .method { padding: 2rem 1.75rem; }
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  #ing-list { list-style: none; }
+  #ing-list li {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 0.95rem;
+  }
+  #ing-list li:last-child { border-bottom: none; }
+  #ing-list .amt {
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    min-width: 4.5ch;
+  }
+
+  #step-list { list-style: none; counter-reset: step; }
+  #step-list li {
+    position: relative;
+    padding: 0 0 1.4rem 2.4rem;
+    counter-increment: step;
+    font-size: 0.95rem;
+  }
+  #step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -0.1rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 50%;
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #step-list li:last-child { padding-bottom: 0; }
+  .step-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Timers */
+  .timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
+    padding: 0.4rem 0.65rem;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+  .timer .time {
+    font-family: 'Fraunces', serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+    min-width: 3.5ch;
+    text-align: center;
+  }
+  .timer.done .time { color: var(--accent); }
+  .timer button {
+    border: none;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .timer button:hover { opacity: 0.85; }
+  .timer button.ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+
+  .notes {
+    padding: 1.75rem 2.75rem 2.25rem;
+    border-top: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .notes h2 { font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .notes p { font-size: 0.92rem; color: var(--muted); margin-bottom: 0.6rem; }
+  .notes p:last-child { margin-bottom: 0; }
+  @media (max-width: 640px) {
+    .notes { padding: 1.75rem; }
+  }
+
+  footer {
+    max-width: 760px;
+    margin: 1.25rem auto 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { border: none; }
+    .servings, .timer, footer { display: none !important; }
+    .body { grid-template-columns: 1fr 1.6fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <div class="eyebrow">Pasta &middot; 25 Minutes</div>
+      <h1>Spaghetti Aglio e Olio</h1>
+      <p class="tagline">The classic Roman pantry pasta — garlic and chili sizzled gold in olive oil, whisked with starchy pasta water into a silky, clinging sauce. No cream, no cheese, just technique.</p>
+      <div class="meta">
+        <div><div class="label">Prep</div><div class="value">10 min</div></div>
+        <div><div class="label">Cook</div><div class="value">15 min</div></div>
+        <div><div class="label">Serves</div><div class="value"><span id="serves-meta">2</span></div></div>
+      </div>
+    </header>
+
+    <div class="servings">
+      <span class="ctl-label">Servings</span>
+      <div class="stepper">
+        <button id="minus" aria-label="Fewer servings">&minus;</button>
+        <span class="count" id="count">2</span>
+        <button id="plus" aria-label="More servings">+</button>
+      </div>
+      <input type="range" id="slider" min="1" max="8" value="2" step="1" aria-label="Adjust servings">
+    </div>
+
+    <div class="body">
+      <div class="ingredients">
+        <h2>Ingredients</h2>
+        <ul id="ing-list"></ul>
+      </div>
+      <div class="method">
+        <h2>Method</h2>
+        <ol id="step-list"></ol>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h2>Notes</h2>
+      <p>Crush the garlic rather than chopping it — crushing ruptures more of the cell walls and releases a punchier flavour into the oil.</p>
+      <p>The starchy pasta water is what turns oil and water into a silky, clinging sauce — don't skip reserving a cup of it before draining.</p>
+      <p>Traditional aglio e olio skips cheese entirely, but a dusting of pecorino or a scattering of toasted breadcrumbs (for a dairy-free crunch) are both welcome finishing touches.</p>
+      <p>A couple of anchovy fillets melted into the oil alongside the garlic add a savoury depth if you'd like to riff on the classic. A little lemon zest at the end brightens it up nicely too.</p>
+    </div>
+  </div>
+
+  <footer>Tip: use your browser's Print option to save as PDF or print a clean copy.</footer>
+
+<script>
+  const BASE = 2;
+
+  // ---- Data ----
+  const ingredients = [
+    { amt: 300, unit: 'g',  name: 'spaghetti' },
+    { amt: 4, unit: null,   name: 'garlic cloves, crushed' },
+    { amt: 2, unit: null,   name: 'fresh red chilies, finely chopped (or dried chili flakes, to taste)' },
+    { amt: 3, unit: 'tbsp', name: 'fresh parsley, chopped' },
+    { amt: 5, unit: 'tbsp', name: 'extra virgin olive oil, divided' },
+    { amt: 2, unit: 'tbsp', name: 'water, for sizzling the garlic' },
+    { amt: 1, unit: 'pinch', name: 'salt and pepper, to taste' },
+  ];
+
+  const steps = [
+    { title: 'Prep the aromatics', text: "Finely crush the garlic and chop the chilies and parsley.", secs: null },
+    { title: 'Boil the pasta', text: "Bring a large pot of salted water to a boil. Add the spaghetti and cook for 1–2 minutes less than the package instructions (about 12–13 minutes for regular spaghetti), stirring occasionally so it doesn't stick. Reserve a cup of the pasta water, then drain.", secs: 720 },
+    { title: 'Start the garlic oil', text: "While the pasta cooks, heat the olive oil in a large pan over medium heat. Add the 2 tablespoons of water before the garlic — this keeps it from browning too fast — then add the crushed garlic, chili, and half the parsley. Stir gently until the garlic turns golden and fragrant, taking care not to let it burn.", secs: null },
+    { title: 'Build the emulsion', text: "Once fragrant, start ladling in a little of the reserved pasta water at a time, tossing and stirring vigorously (a fork or wooden spoon works well) so the water and oil come together into a creamy emulsion.", secs: null },
+    { title: 'Combine', text: "Add the drained spaghetti to the pan and toss gently to coat every strand. Cook for another minute, adding a touch more pasta water and a drizzle of olive oil along with the remaining parsley.", secs: 60 },
+    { title: 'Toss and finish', text: "Toss everything together quickly and vigorously — tongs make this easy — so the starch ties the sauce together. Finish with one last touch of pasta water and olive oil if the pan looks dry.", secs: null },
+    { title: 'Plate and serve', text: "Plate generously and spoon over any sauce left in the pan. Garnish with extra parsley, toasted breadcrumbs, a grating of pecorino, or a crack of black pepper.", secs: null },
+  ];
+
+  // ---- Ingredient scaling & pretty fractions ----
+  const FRACTIONS = [
+    [0.125, '⅛'], [0.25, '¼'], [0.333, '⅓'], [0.375, '⅜'],
+    [0.5, '½'], [0.625, '⅝'], [0.667, '⅔'], [0.75, '¾'], [0.875, '⅞'],
+  ];
+
+  function pretty(n) {
+    if (n >= 10) return Math.round(n).toString();
+    const whole = Math.floor(n);
+    const frac = n - whole;
+    if (frac < 0.0625) return whole.toString();
+    if (frac > 0.9375) return (whole + 1).toString();
+    let best = null, bestDiff = 1;
+    for (const [v, s] of FRACTIONS) {
+      const d = Math.abs(frac - v);
+      if (d < bestDiff) { bestDiff = d; best = s; }
+    }
+    if (best && bestDiff < 0.06) {
+      return whole > 0 ? whole + ' ' + best : best;
+    }
+    return (Math.round(n * 10) / 10).toString();
+  }
+
+  function renderIngredients(servings) {
+    const mult = servings / BASE;
+    document.getElementById('ing-list').innerHTML = ingredients.map(i => {
+      const scaled = i.amt * mult;
+      const amtStr = i.unit ? pretty(scaled) + ' ' + i.unit : pretty(scaled);
+      return '<li><span class="amt">' + amtStr + '</span><span>' + i.name + '</span></li>';
+    }).join('');
+  }
+
+  // ---- Timers ----
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' + sec : sec);
+  }
+
+  let audioCtx = null;
+  function beep() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const t = audioCtx.currentTime;
+      for (let k = 0; k < 3; k++) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 880;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const start = t + k * 0.32;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.4, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+        osc.start(start); osc.stop(start + 0.26);
+      }
+    } catch (e) { /* audio not available */ }
+  }
+
+  function makeTimer(totalSecs) {
+    const wrap = document.createElement('div');
+    wrap.className = 'timer';
+
+    const time = document.createElement('span');
+    time.className = 'time';
+    time.textContent = fmt(totalSecs);
+
+    const main = document.createElement('button');
+    main.textContent = 'Start';
+
+    const reset = document.createElement('button');
+    reset.className = 'ghost';
+    reset.textContent = 'Reset';
+
+    let remaining = totalSecs;
+    let handle = null;
+    let state = 'idle'; // idle | running | paused | done
+
+    function tick() {
+      remaining -= 1;
+      if (remaining <= 0) {
+        remaining = 0;
+        time.textContent = 'Done';
+        wrap.classList.add('done');
+        clearInterval(handle); handle = null;
+        state = 'done';
+        main.textContent = 'Start';
+        beep();
+        return;
+      }
+      time.textContent = fmt(remaining);
+    }
+
+    main.addEventListener('click', () => {
+      if (state === 'running') {
+        clearInterval(handle); handle = null;
+        state = 'paused';
+        main.textContent = 'Resume';
+      } else {
+        if (state === 'done') { remaining = totalSecs; wrap.classList.remove('done'); time.textContent = fmt(remaining); }
+        handle = setInterval(tick, 1000);
+        state = 'running';
+        main.textContent = 'Pause';
+      }
+    });
+
+    reset.addEventListener('click', () => {
+      clearInterval(handle); handle = null;
+      remaining = totalSecs;
+      state = 'idle';
+      wrap.classList.remove('done');
+      time.textContent = fmt(totalSecs);
+      main.textContent = 'Start';
+    });
+
+    wrap.append(time, main, reset);
+    return wrap;
+  }
+
+  function renderSteps() {
+    const list = document.getElementById('step-list');
+    list.innerHTML = '';
+    steps.forEach(s => {
+      const li = document.createElement('li');
+      const title = document.createElement('span');
+      title.className = 'step-title';
+      title.textContent = s.title;
+      li.appendChild(title);
+      li.appendChild(document.createTextNode(s.text));
+      if (s.secs) {
+        li.appendChild(document.createElement('br'));
+        li.appendChild(makeTimer(s.secs));
+      }
+      list.appendChild(li);
+    });
+  }
+
+  // ---- Wire up servings controls ----
+  const slider = document.getElementById('slider');
+  const count = document.getElementById('count');
+  const servesMeta = document.getElementById('serves-meta');
+  const minus = document.getElementById('minus');
+  const plus = document.getElementById('plus');
+
+  function setServings(v) {
+    v = Math.max(1, Math.min(8, v));
+    slider.value = v;
+    count.textContent = v;
+    servesMeta.textContent = v;
+    minus.disabled = v <= 1;
+    plus.disabled = v >= 8;
+    renderIngredients(v);
+  }
+
+  slider.addEventListener('input', e => setServings(parseInt(e.target.value, 10)));
+  minus.addEventListener('click', () => setServings(parseInt(slider.value, 10) - 1));
+  plus.addEventListener('click', () => setServings(parseInt(slider.value, 10) + 1));
+
+  setServings(2);
+  renderSteps();
+</script>
+</body>
+</html>

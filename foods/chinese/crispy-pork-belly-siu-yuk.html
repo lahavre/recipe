@@ -224,7 +224,7 @@
       </li>
       <li>
         <span class="step-title">Roast at low heat</span>
-        <span class="step-body">Preheat your oven to <strong>375&deg;F</strong> (400&deg;F for a toaster oven). Set a roasting rack over a pan with the water, and place the pork on the rack, skin-side up. Roast for <strong>20&ndash;25 minutes</strong>.</span>
+        <span class="step-body">Preheat your oven to <strong>190&deg;C</strong> (205&deg;C for a toaster oven). Set a roasting rack over a pan with the water, and place the pork on the rack, skin-side up. Roast for <strong>20&ndash;25 minutes</strong>.</span>
         <div class="timer" data-seconds="1200">
           <span class="timer-hint">Low roast</span>
           <span class="timer-display">20:00</span>
@@ -234,7 +234,7 @@
       </li>
       <li>
         <span class="step-title">Finish at high heat</span>
-        <span class="step-body">Raise the oven to <strong>425&deg;F</strong> (400&deg;F for a toaster oven) and continue roasting for another <strong>30&ndash;35 minutes</strong>, watching the skin closely in the final 10&ndash;15 minutes as it blisters and crackles.</span>
+        <span class="step-body">Raise the oven to <strong>220&deg;C</strong> (230&deg;C for a toaster oven) and continue roasting for another <strong>30&ndash;35 minutes</strong>, watching the skin closely in the final 10&ndash;15 minutes as it blisters and crackles.</span>
         <div class="timer" data-seconds="1800">
           <span class="timer-hint">High roast</span>
           <span class="timer-display">30:00</span>
@@ -274,15 +274,15 @@
   "use strict";
 
   /* ---------- Ingredient scaling ---------- */
-  var BASE = 4;            // base batch = 4 servings (~1.6 lb pork belly)
+  var BASE = 4;            // base batch = 4 servings (~725g pork belly)
   var MIN = 2, MAX = 8;
   var servings = BASE;
 
   var ingredients = [
-    {key:"pork",       name:"pork belly, skin-on", amount:1.6, unit:"lb",  mode:"frac"},
+    {key:"pork",       name:"pork belly, skin-on", amount:725, unit:"g",  mode:"int"},
     {key:"salt1",      name:"salt, for drawing moisture from the skin", amount:1, unit:"tbsp", mode:"half"},
     {key:"vinegar",    name:"white rice vinegar, for the skin", amount:1, unit:"tsp", mode:"half"},
-    {key:"water",      name:"water, for the roasting pan", amount:0.5, unit:"cup", mode:"frac"},
+    {key:"water",      name:"water, for the roasting pan", amount:120, unit:"ml", mode:"int"},
     {key:"fivespice",  name:"five-spice powder (dry rub)", amount:0.5, unit:"tsp", mode:"half"},
     {key:"blackpepper",name:"black pepper (dry rub)", amount:0.33, unit:"tsp", mode:"frac"},
     {key:"whitepepper",name:"white pepper (dry rub)", amount:0.25, unit:"tsp", mode:"frac"},
@@ -317,6 +317,9 @@
     if(item.mode === "half"){
       var r = Math.round(v*2)/2;
       return trim(r) + (item.unit ? " " + item.unit : "");
+    }
+    if(item.mode === "int"){
+      return Math.round(v) + (item.unit ? " " + item.unit : "");
     }
     return asFraction(v) + (item.unit ? " " + item.unit : "");
   }

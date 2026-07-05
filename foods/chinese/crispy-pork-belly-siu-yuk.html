@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crispy Pork Belly (Siu Yuk)</title>
+<style>
+  :root{
+    --ink:#2a1810;
+    --wine:#6b2818;
+    --ruby:#a4402a;
+    --berry:#8a3a20;
+    --gold:#c9973d;
+    --blush:#f5e6d8;
+    --paper:#faf4ee;
+    --frost:#f3ece3;
+    --line:#e6d3bf;
+    --muted:#8a7460;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:
+      radial-gradient(120% 80% at 80% -10%, #fbe4d0 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #f3e3d2 0%, transparent 50%),
+      var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    padding:2rem 1.25rem 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:2rem;}
+  .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.66rem;font-weight:600;color:var(--ruby);margin-bottom:1.1rem;
+  }
+  .han{
+    font-size:1.5rem;color:var(--wine);letter-spacing:.18em;
+    margin-bottom:.55rem;font-weight:400;
+  }
+  h1{font-size:clamp(2.4rem,8vw,3.6rem);font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--wine);}
+  h1 em{font-style:italic;color:var(--ruby);}
+  .tagline{margin:1.1rem auto 0;max-width:44ch;color:var(--muted);font-size:1.02rem;}
+  .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.6rem;}
+  .chip{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;
+    background:var(--blush);color:var(--wine);border:1px solid var(--line);
+    border-radius:999px;padding:.4rem .85rem;
+  }
+
+  /* serving control */
+  .servings{
+    display:flex;align-items:center;justify-content:center;gap:1rem;
+    margin:1.8rem auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:.85rem 1.1rem;max-width:320px;
+    box-shadow:0 6px 20px -14px rgba(107,40,24,.5);
+  }
+  .servings .label{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .servings .count{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;
+    font-size:1.15rem;color:var(--wine);min-width:5.5rem;text-align:center;
+  }
+  .servings button{
+    width:2.3rem;height:2.3rem;border-radius:50%;border:none;cursor:pointer;
+    background:var(--ruby);color:#fff;font-size:1.3rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .12s ease,background .12s ease;
+  }
+  .servings button:active{transform:scale(.9);}
+  .servings button:disabled{background:var(--line);cursor:not-allowed;}
+  .servings button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .servings button:hover{background:var(--wine);}
+  }
+
+  section{margin-top:2.6rem;}
+  .section-head{display:flex;align-items:baseline;gap:.8rem;border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:1.3rem;}
+  .section-head h2{font-size:1.4rem;font-weight:400;color:var(--berry);}
+  .section-head .num{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+
+  ul.ingredients{list-style:none;}
+  ul.ingredients li{display:flex;align-items:baseline;gap:.6rem;padding:.55rem 0;border-bottom:1px dotted var(--line);}
+  ul.ingredients li:last-child{border-bottom:none;}
+  .amt{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:.92rem;color:var(--ruby);min-width:5.5rem;flex-shrink:0;}
+
+  ol.steps{list-style:none;counter-reset:step;}
+  ol.steps li{counter-increment:step;position:relative;padding:0 0 1.5rem 3.2rem;}
+  ol.steps li::before{
+    content:counter(step,decimal-leading-zero);position:absolute;left:0;top:-.1rem;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.05em;
+    color:#fff;background:var(--ruby);width:2.1rem;height:2.1rem;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:1.05rem;top:2.2rem;bottom:.2rem;width:1px;background:var(--line);}
+  .step-title{font-weight:700;color:var(--wine);display:block;margin-bottom:.15rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.95rem;letter-spacing:.01em;}
+  .step-body{color:var(--ink);}
+  .step-body strong{color:var(--wine);}
+
+  /* timer widget */
+  .timer{
+    margin-top:.7rem;display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+    background:var(--frost);border:1px solid #e6d5c2;border-radius:12px;padding:.5rem .65rem;
+  }
+  .timer.done{background:#e7f6ec;border-color:#bfe6c9;}
+  .timer-display{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
+    font-weight:700;font-size:1.05rem;color:var(--ruby);min-width:4.6rem;text-align:center;letter-spacing:.02em;
+  }
+  .timer.done .timer-display{color:#1d7a3c;}
+  .timer-hint{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:.1rem;}
+  .timer button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.03em;
+    border:none;cursor:pointer;border-radius:8px;padding:.4rem .7rem;background:var(--ruby);color:#fff;
+    transition:background .12s ease,transform .1s ease;
+  }
+  .timer button.ghost{background:transparent;color:var(--ruby);border:1px solid #e6d5c2;}
+  .timer button:active{transform:scale(.94);}
+  .timer button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .timer button:hover{filter:brightness(1.08);}
+  }
+  .timer .presets{display:inline-flex;gap:.3rem;flex-wrap:wrap;}
+  .timer .presets button{background:transparent;color:var(--muted);border:1px solid var(--line);padding:.3rem .55rem;}
+  .timer .presets button.active{background:var(--ruby);color:#fff;border-color:var(--ruby);}
+
+  .notes{margin-top:2.8rem;background:linear-gradient(180deg,var(--blush),#fff);border:1px solid var(--line);border-radius:14px;padding:1.5rem 1.6rem;}
+  .notes h2{font-size:1.05rem;color:var(--wine);font-weight:700;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;margin-bottom:.7rem;}
+  .notes ul{list-style:none;}
+  .notes li{position:relative;padding-left:1.3rem;margin-bottom:.6rem;color:var(--ink);font-size:.96rem;}
+  .notes li::before{content:"\2022";position:absolute;left:.2rem;top:-.05rem;color:var(--gold);font-size:1.2rem;}
+  .notes li:last-child{margin-bottom:0;}
+
+  footer{text-align:center;margin-top:3rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  @media (prefers-reduced-motion:no-preference){
+    .wrap{animation:rise .6s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  }
+  @media print{
+    body{background:#fff;}
+    .timer button,.servings button{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Cantonese Roast &middot; Crispy Skin Pork Belly</div>
+    <div class="han">燒肉</div>
+    <h1>Crispy Pork Belly <em>Siu Yuk</em></h1>
+    <p class="tagline">Cantonese-style roast pork belly with bubbled, shattering crackling — a dry overnight rest and a two-stage roast are what get the skin there.</p>
+    <div class="meta">
+      <span class="chip">Oven roasted</span>
+      <span class="chip">10&ndash;12 hr dry-brine</span>
+      <span class="chip">~1 hr active time</span>
+      <span class="chip">Serves 4</span>
+    </div>
+
+    <div class="servings" aria-label="Adjust batch size">
+      <button id="minus" aria-label="Fewer servings">&minus;</button>
+      <div>
+        <div class="count"><span id="count">4</span> servings</div>
+        <div class="label">Batch size</div>
+      </div>
+      <button id="plus" aria-label="More servings">+</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head"><span class="num">01</span><h2>Ingredients</h2></div>
+    <ul class="ingredients" id="ingredients"></ul>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="num">02</span><h2>Method</h2></div>
+    <ol class="steps">
+      <li>
+        <span class="step-title">Parboil the pork</span>
+        <span class="step-body">Bring a pot of water to a boil — enough to submerge the pork belly. Place it skin-side down and cook for <strong>1 minute</strong>, then flip and cook the meat side for another 30&ndash;45 seconds, just until the colour changes.</span>
+        <div class="timer" data-seconds="60">
+          <span class="timer-hint">Skin side</span>
+          <span class="timer-display">1:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Shock and clean the skin</span>
+        <span class="step-body">Transfer the pork straight into a bowl of ice water. Scrape the skin firmly with a knife held upright, working sideways to remove any surface debris, then pat it completely dry. Poke holes all over the skin, through its full thickness, with a fork or toothpicks — the more holes you poke now, the more bubbly and crackly the skin will become later.</span>
+      </li>
+      <li>
+        <span class="step-title">Score and season the meat</span>
+        <span class="step-body">Flip the belly skin-side down. Cut two long slashes into the meat without piercing the skin, then score perpendicular cuts to create a diamond pattern. Mix the dry rub and work it into the scored meat and crevices, keeping it off the skin entirely. Stir the remaining rub into the bean sauce and sugar, and rub that marinade over the meat as well.</span>
+      </li>
+      <li>
+        <span class="step-title">Wrap and dry-brine the skin</span>
+        <span class="step-body">Wrap the sides of the belly in aluminium foil, skin facing up and left exposed. Sprinkle the salt over the skin and let it sit for <strong>5 minutes</strong>, then wipe it off — this draws out surface moisture for a crispier finish. Brush the skin with the rice vinegar.</span>
+        <div class="timer" data-seconds="300">
+          <span class="timer-hint">Salt draw</span>
+          <span class="timer-display">5:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Rest overnight</span>
+        <span class="step-body">Refrigerate the pork uncovered for at least <strong>10&ndash;12 hours</strong> (overnight is easiest). This dry-out time is essential for the skin to crisp properly in the oven — don't rush or skip it.</span>
+        <div class="timer" data-seconds="43200">
+          <span class="timer-hint">Dry-brine</span>
+          <span class="presets" role="group" aria-label="Rest length">
+            <button data-h="10">10h</button>
+            <button data-h="12" class="active">12h</button>
+          </span>
+          <span class="timer-display">12:00:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Roast at low heat</span>
+        <span class="step-body">Preheat your oven to <strong>375&deg;F</strong> (400&deg;F for a toaster oven). Set a roasting rack over a pan with the water, and place the pork on the rack, skin-side up. Roast for <strong>20&ndash;25 minutes</strong>.</span>
+        <div class="timer" data-seconds="1200">
+          <span class="timer-hint">Low roast</span>
+          <span class="timer-display">20:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Finish at high heat</span>
+        <span class="step-body">Raise the oven to <strong>425&deg;F</strong> (400&deg;F for a toaster oven) and continue roasting for another <strong>30&ndash;35 minutes</strong>, watching the skin closely in the final 10&ndash;15 minutes as it blisters and crackles.</span>
+        <div class="timer" data-seconds="1800">
+          <span class="timer-hint">High roast</span>
+          <span class="timer-display">30:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Rest before carving</span>
+        <span class="step-body">Let the pork rest for a full <strong>hour</strong> before cutting into it. This lets the juices redistribute and makes for cleaner slices and crisper crackling.</span>
+        <div class="timer" data-seconds="3600">
+          <span class="timer-hint">Rest</span>
+          <span class="timer-display">1:00:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <div class="notes">
+    <h2>Good to know</h2>
+    <ul>
+      <li>Poke as many holes as you can stand to — more holes means more bubbled, shattering crackling once it's roasted.</li>
+      <li>The overnight dry-out in the fridge is non-negotiable for good crackling. Don't shorten it much below 10 hours if you can help it.</li>
+      <li>Salting then wiping the skin, followed by a coat of white rice vinegar, both pull moisture out of the skin before it ever sees the oven — moisture is the enemy of crackling.</li>
+      <li>Keep the dry rub and marinade off the skin entirely. Any spice or moisture there will stop it from crisping.</li>
+      <li>Resist cutting into it right away — the full hour of resting keeps the juices in and makes the crackling easier to shatter cleanly once it's cooled slightly.</li>
+    </ul>
+  </div>
+
+  <footer>Roasted low then high &middot; 燒肉 &middot; Best served warm, sliced thin</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Ingredient scaling ---------- */
+  var BASE = 4;            // base batch = 4 servings (~1.6 lb pork belly)
+  var MIN = 2, MAX = 8;
+  var servings = BASE;
+
+  var ingredients = [
+    {key:"pork",       name:"pork belly, skin-on", amount:1.6, unit:"lb",  mode:"frac"},
+    {key:"salt1",      name:"salt, for drawing moisture from the skin", amount:1, unit:"tbsp", mode:"half"},
+    {key:"vinegar",    name:"white rice vinegar, for the skin", amount:1, unit:"tsp", mode:"half"},
+    {key:"water",      name:"water, for the roasting pan", amount:0.5, unit:"cup", mode:"frac"},
+    {key:"fivespice",  name:"five-spice powder (dry rub)", amount:0.5, unit:"tsp", mode:"half"},
+    {key:"blackpepper",name:"black pepper (dry rub)", amount:0.33, unit:"tsp", mode:"frac"},
+    {key:"whitepepper",name:"white pepper (dry rub)", amount:0.25, unit:"tsp", mode:"frac"},
+    {key:"garlicsalt", name:"garlic salt (dry rub)", amount:1, unit:"tsp", mode:"half"},
+    {key:"salt2",      name:"salt (dry rub)", amount:0.5, unit:"tsp", mode:"half"},
+    {key:"beansauce",  name:"ground bean sauce, 磨豉酱 (marinade)", amount:2, unit:"tsp", mode:"half"},
+    {key:"sugar",      name:"sugar (marinade)", amount:1, unit:"tsp", mode:"half"}
+  ];
+
+  var FRACS = [[0.125,"⅛"],[0.25,"¼"],[0.333,"⅓"],[0.375,"⅜"],[0.5,"½"],[0.625,"⅝"],[0.667,"⅔"],[0.75,"¾"],[0.875,"⅞"]];
+
+  function trim(n){
+    n = Math.round(n*100)/100;
+    return String(n);
+  }
+
+  function asFraction(v){
+    var whole = Math.floor(v + 0.0001);
+    var frac = v - whole;
+    if(frac < 0.06) return String(whole);
+    var best=null, bestD=0.07;
+    for(var i=0;i<FRACS.length;i++){
+      var d=Math.abs(frac-FRACS[i][0]);
+      if(d<bestD){bestD=d;best=FRACS[i][1];}
+    }
+    if(best) return (whole>0 ? whole+" " : "") + best;
+    return trim(v);
+  }
+
+  function format(item, factor){
+    var v = item.amount * factor;
+    if(item.mode === "half"){
+      var r = Math.round(v*2)/2;
+      return trim(r) + (item.unit ? " " + item.unit : "");
+    }
+    return asFraction(v) + (item.unit ? " " + item.unit : "");
+  }
+
+  function renderIngredients(){
+    var factor = servings / BASE;
+    var html = "";
+    for(var i=0;i<ingredients.length;i++){
+      var it = ingredients[i];
+      html += '<li><span class="amt">' + format(it, factor) + '</span><span>' + it.name + '</span></li>';
+    }
+    document.getElementById("ingredients").innerHTML = html;
+    document.getElementById("count").textContent = servings;
+  }
+
+  function setServings(n){
+    servings = Math.max(MIN, Math.min(MAX, n));
+    document.getElementById("minus").disabled = (servings <= MIN);
+    document.getElementById("plus").disabled = (servings >= MAX);
+    renderIngredients();
+  }
+
+  document.getElementById("minus").addEventListener("click", function(){ setServings(servings-1); });
+  document.getElementById("plus").addEventListener("click", function(){ setServings(servings+1); });
+  setServings(BASE);
+
+  /* ---------- Countdown timers ---------- */
+  function fmtTime(s){
+    s = Math.max(0, Math.round(s));
+    var h = Math.floor(s/3600);
+    var m = Math.floor((s%3600)/60);
+    var sec = s%60;
+    var pad = function(x){ return (x<10?"0":"")+x; };
+    return (h>0 ? h+":"+pad(m) : m) + ":" + pad(sec);
+  }
+
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      var ctx = new Ctx();
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = "sine"; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.1);
+      o.start(); o.stop(ctx.currentTime+1.15);
+    }catch(e){}
+  }
+
+  function initTimer(el){
+    var total = parseInt(el.getAttribute("data-seconds"),10);
+    var remaining = total;
+    var endAt = 0, raf = null, running = false;
+    var display = el.querySelector(".timer-display");
+    var startBtn = el.querySelector(".t-start");
+    var resetBtn = el.querySelector(".t-reset");
+    var presets = el.querySelectorAll(".presets button");
+
+    function paint(){ display.textContent = fmtTime(remaining); }
+    function stopLoop(){ if(raf){ clearInterval(raf); raf = null; } }
+
+    function tick(){
+      remaining = (endAt - Date.now())/1000;
+      if(remaining <= 0){
+        remaining = 0; paint();
+        running = false; stopLoop();
+        startBtn.textContent = "Start";
+        el.classList.add("done");
+        display.textContent = "Done!";
+        beep();
+        return;
+      }
+      paint();
+    }
+
+    function start(){
+      if(running) return;
+      if(remaining <= 0) remaining = total;
+      el.classList.remove("done");
+      endAt = Date.now() + remaining*1000;
+      running = true;
+      startBtn.textContent = "Pause";
+      raf = setInterval(tick, 250);
+    }
+    function pause(){
+      if(!running) return;
+      running = false; stopLoop();
+      startBtn.textContent = "Resume";
+    }
+    function reset(){
+      running = false; stopLoop();
+      remaining = total;
+      el.classList.remove("done");
+      startBtn.textContent = "Start";
+      paint();
+    }
+
+    startBtn.addEventListener("click", function(){ running ? pause() : start(); });
+    resetBtn.addEventListener("click", reset);
+
+    for(var i=0;i<presets.length;i++){
+      presets[i].addEventListener("click", function(){
+        for(var j=0;j<presets.length;j++) presets[j].classList.remove("active");
+        this.classList.add("active");
+        total = parseInt(this.getAttribute("data-h"),10) * 3600;
+        reset();
+      });
+    }
+
+    paint();
+  }
+
+  var timers = document.querySelectorAll(".timer");
+  for(var i=0;i<timers.length;i++) initTimer(timers[i]);
+})();
+</script>
+</body>
+</html>

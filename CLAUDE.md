@@ -74,7 +74,7 @@ Each recipe page is a **single self-contained HTML file** (its own `<style>` and
 
 1. **Header** — dish name as `<h1>`, a one-sentence tagline, and meta info (prep/cook time or similar) as small chips or labeled fields.
 2. **Servings/batch control** — a stepper (`-` / `+` buttons, or +/- with a range slider) that lets the reader scale the recipe. Ingredient amounts must re-render via JavaScript when this changes (see the `renderIngredients()` pattern in existing recipes) — never hardcode a single serving size.
-3. **Ingredients list** — each item shows a bold/colored amount + the ingredient name.
+3. **Ingredients list** — each item shows a bold/colored amount + the ingredient name. Use **metric units** (g, ml, °C) rather than imperial (oz, lb, cups, °F) — `tsp`/`tbsp` are fine for small volumes since they're used in both systems. Convert any imperial amounts from a source recipe to metric before adding it.
 4. **Method** — numbered steps, each with a short bold title followed by the instruction text. Steps with a wait/cook time get an optional countdown timer widget (Start/Reset buttons, ticks down, beeps and highlights on completion).
 5. **Notes** — a closing section with tips, substitutions, or storage info.
 6. **Print styles** (`@media print`) that hide interactive controls (steppers, timer buttons) and simplify the layout for printing/saving as PDF.

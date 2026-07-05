@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>West Lake Longjing · Hot Brew</title>
+<style>
+  :root{
+    --ink:#1f2e22;
+    --pine:#2c4a32;
+    --jade:#3f7350;
+    --leaf:#6aa15f;
+    --gold:#b08a2e;
+    --tin:#8fbf8a;
+    --wash:#eef3e6;
+    --paper:#f6f8ee;
+    --frost:#eef1e7;
+    --line:#d4e1c6;
+    --muted:#7a8a72;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:
+      radial-gradient(120% 80% at 82% -10%, #dcecc9 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #e6efd8 0%, transparent 50%),
+      var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    padding:2rem 1.25rem 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:2rem;}
+  .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.66rem;font-weight:600;color:var(--jade);margin-bottom:1.1rem;
+  }
+  .han{
+    font-size:1.5rem;color:var(--pine);letter-spacing:.18em;
+    margin-bottom:.55rem;font-weight:400;
+  }
+  h1{font-size:clamp(2.3rem,8vw,3.5rem);font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--pine);}
+  h1 em{font-style:italic;color:var(--jade);}
+  .tagline{margin:1.1rem auto 0;max-width:46ch;color:var(--muted);font-size:1.02rem;}
+  .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.6rem;}
+  .chip{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;
+    background:var(--wash);color:var(--pine);border:1px solid var(--line);
+    border-radius:999px;padding:.4rem .85rem;
+  }
+
+  /* grade strip — echoes the tin's four descriptors */
+  .grade{
+    display:flex;justify-content:center;flex-wrap:wrap;gap:0;margin:1.6rem auto 0;
+    width:fit-content;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;
+  }
+  .grade span{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.05em;
+    color:var(--jade);padding:.5rem .9rem;border-right:1px solid var(--line);
+  }
+  .grade span:last-child{border-right:none;}
+  .grade b{color:var(--pine);font-weight:700;}
+
+  /* serving control */
+  .servings{
+    display:flex;align-items:center;justify-content:center;gap:1rem;
+    margin:1.8rem auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:.85rem 1.1rem;max-width:320px;
+    box-shadow:0 6px 20px -14px rgba(44,74,50,.5);
+  }
+  .servings .label{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .servings .count{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;
+    font-size:1.15rem;color:var(--pine);min-width:5.5rem;text-align:center;
+  }
+  .servings button{
+    width:2.3rem;height:2.3rem;border-radius:50%;border:none;cursor:pointer;
+    background:var(--jade);color:#fff;font-size:1.3rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .12s ease,background .12s ease;
+  }
+  .servings button:active{transform:scale(.9);}
+  .servings button:disabled{background:var(--line);cursor:not-allowed;}
+  .servings button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .servings button:hover{background:var(--pine);}
+  }
+
+  section{margin-top:2.6rem;}
+  .section-head{display:flex;align-items:baseline;gap:.8rem;border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:1.3rem;}
+  .section-head h2{font-size:1.4rem;font-weight:400;color:var(--jade);}
+  .section-head .num{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+
+  ul.ingredients{list-style:none;}
+  ul.ingredients li{display:flex;align-items:baseline;gap:.6rem;padding:.55rem 0;border-bottom:1px dotted var(--line);}
+  ul.ingredients li:last-child{border-bottom:none;}
+  .amt{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:.92rem;color:var(--jade);min-width:5.5rem;}
+  .ing-name small{display:block;color:var(--muted);font-size:.82rem;font-style:italic;}
+
+  ol.steps{list-style:none;counter-reset:step;}
+  ol.steps li{counter-increment:step;position:relative;padding:0 0 1.5rem 3.2rem;}
+  ol.steps li::before{
+    content:counter(step,decimal-leading-zero);position:absolute;left:0;top:-.1rem;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.05em;
+    color:#fff;background:var(--jade);width:2.1rem;height:2.1rem;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:1.05rem;top:2.2rem;bottom:.2rem;width:1px;background:var(--line);}
+  .step-title{font-weight:700;color:var(--pine);display:block;margin-bottom:.15rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.95rem;letter-spacing:.01em;}
+  .step-body{color:var(--ink);}
+  .step-body strong{color:var(--pine);}
+
+  /* timer widget */
+  .timer{
+    margin-top:.7rem;display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+    background:var(--frost);border:1px solid #d7e0cb;border-radius:12px;padding:.5rem .65rem;
+  }
+  .timer.done{background:#e7f6ec;border-color:#bfe6c9;}
+  .timer-display{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
+    font-weight:700;font-size:1.05rem;color:var(--jade);min-width:4.4rem;text-align:center;letter-spacing:.02em;
+  }
+  .timer.done .timer-display{color:#1d7a3c;}
+  .timer-hint{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:.1rem;}
+  .timer button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.03em;
+    border:none;cursor:pointer;border-radius:8px;padding:.4rem .7rem;background:var(--jade);color:#fff;
+    transition:background .12s ease,transform .1s ease;
+  }
+  .timer button.ghost{background:transparent;color:var(--jade);border:1px solid #d7e0cb;}
+  .timer button:active{transform:scale(.94);}
+  .timer button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .timer button:hover{filter:brightness(1.08);}
+  }
+  .timer .presets{display:inline-flex;gap:.3rem;flex-wrap:wrap;}
+  .timer .presets button{background:transparent;color:var(--muted);border:1px solid var(--line);padding:.3rem .55rem;}
+  .timer .presets button.active{background:var(--jade);color:#fff;border-color:var(--jade);}
+
+  .notes{margin-top:2.8rem;background:linear-gradient(180deg,var(--wash),#fff);border:1px solid var(--line);border-radius:14px;padding:1.5rem 1.6rem;}
+  .notes h2{font-size:1.05rem;color:var(--pine);font-weight:700;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;margin-bottom:.7rem;}
+  .notes ul{list-style:none;}
+  .notes li{position:relative;padding-left:1.3rem;margin-bottom:.6rem;color:var(--ink);font-size:.96rem;}
+  .notes li::before{content:"\2022";position:absolute;left:.2rem;top:-.05rem;color:var(--gold);font-size:1.2rem;}
+  .notes li:last-child{margin-bottom:0;}
+
+  footer{text-align:center;margin-top:3rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  @media (prefers-reduced-motion:no-preference){
+    .wrap{animation:rise .6s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  }
+  @media print{
+    body{background:#fff;}
+    .timer button,.servings button{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hot Brew &middot; Glass Teapot &middot; Green Tea</div>
+    <div class="han">明前西湖龙井</div>
+    <h1>West&nbsp;Lake <em>Longjing</em></h1>
+    <p class="tagline">Pre-Qingming Dragon Well from Longjing Village — tender flat leaves brewed gently in a glass teapot. Cool water, a short steep, poured clear and re-steeped. No sugar, no fruit; just the leaf.</p>
+    <div class="meta">
+      <span class="chip">Glass teapot</span>
+      <span class="chip">80–85°C water</span>
+      <span class="chip">2–3 infusions</span>
+      <span class="chip">Best served fresh</span>
+    </div>
+
+    <div class="grade" aria-label="Grade markers from the tin">
+      <span><b>色绿</b> green</span>
+      <span><b>香郁</b> fragrant</span>
+      <span><b>味醇</b> mellow</span>
+      <span><b>形美</b> fine form</span>
+    </div>
+
+    <div class="servings" aria-label="Adjust batch size">
+      <button id="minus" aria-label="Fewer cups">&minus;</button>
+      <div>
+        <div class="count"><span id="count">4</span> cups</div>
+        <div class="label">Batch size</div>
+      </div>
+      <button id="plus" aria-label="More cups">+</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head"><span class="num">01</span><h2>What you need</h2></div>
+    <ul class="ingredients" id="ingredients"></ul>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="num">02</span><h2>Method</h2></div>
+    <ol class="steps">
+      <li>
+        <span class="step-title">Warm the teapot</span>
+        <span class="step-body">Rinse the glass teapot and cups with a little hot water and tip it out. A warm pot keeps the brew temperature steady — and the clear glass lets you watch the leaves unfurl.</span>
+      </li>
+      <li>
+        <span class="step-title">Cool the water</span>
+        <span class="step-body">Bring fresh water to a boil, then let it stand uncovered for <strong>2–3 minutes</strong> to drop to about <strong>80–85°C</strong>. Boiling water scalds these tender pre-Qingming leaves and turns them grassy and bitter, so this rest matters.</span>
+        <div class="timer" data-seconds="180">
+          <span class="timer-hint">Cool</span>
+          <span class="timer-display">3:00</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Add the leaves and water</span>
+        <span class="step-body">Put the leaves in the warm pot, then pour the cooled water down the side rather than straight onto the leaves. Fill to your batch level. The leaves will float, then slowly sink and stand upright as they open.</span>
+      </li>
+      <li>
+        <span class="step-title">Steep — keep it short</span>
+        <span class="step-body">Leave the lid off or ajar; trapped heat stews green tea. The <strong>first infusion runs about 1:30</strong>. Later infusions want a little longer — pick the preset for the round you're on.</span>
+        <div class="timer" data-seconds="90">
+          <span class="timer-hint">Steep</span>
+          <span class="presets" role="group" aria-label="Infusion length">
+            <button data-s="90" class="active">1st · 1:30</button>
+            <button data-s="120">2nd · 2:00</button>
+            <button data-s="150">3rd · 2:30</button>
+          </span>
+          <span class="timer-display">1:30</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Pour it all out</span>
+        <span class="step-body">When the timer's up, pour the <strong>entire pot</strong> out into the cups (or a pitcher), down to the last drops. Don't let brewed tea sit on the leaves between sips — that's what turns it bitter. The liquor should be a pale, clear jade-green.</span>
+      </li>
+      <li>
+        <span class="step-title">Re-steep</span>
+        <span class="step-body">Add fresh 80–85°C water to the same leaves for a second and third infusion, each a touch longer than the last. The <strong>second steep is often the sweetest</strong>. Good Longjing gives three rounds before it fades.</span>
+      </li>
+    </ol>
+  </section>
+
+  <div class="notes">
+    <h2>Good to know</h2>
+    <ul>
+      <li>This is a premium spring green tea — the opposite of the hibiscus cold brews. Treat it gently: cool water, short steeps, no sweetener and no fruit, which would only bury its delicate chestnut-sweet aroma.</li>
+      <li>If your pot has a built-in strainer or a removable infuser basket, use it — lifting the leaves out entirely between rounds gives you the most control over bitterness.</li>
+      <li>No thermometer? Boil, then rest 2–3 minutes with the lid off. Roughly: big bubbles = too hot; small "shrimp-eye" bubbles and steam settling = about right.</li>
+      <li>Leaf dose is about <strong>3 g per cup</strong> (a heaped teaspoon). Use a touch less if you like it lighter — easier than fixing an over-strong pot.</li>
+      <li>Drink it the day you open and brew it. Longjing is at its best fresh; store the rest of the tin sealed, cool, and away from light and strong smells.</li>
+    </ul>
+  </div>
+
+  <footer>Brewed hot in a glass teapot · 明前西湖龙井 · Best served fresh</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Ingredient scaling ---------- */
+  var BASE = 4;            // base batch = 4 cups (~800 ml)
+  var MIN = 1, MAX = 12;
+  var servings = BASE;
+
+  var ingredients = [
+    {key:"tea",   name:"West Lake Longjing leaves", sub:"明前西湖龙井 — about a heaped tsp per cup", amount:12,  unit:"g",  mode:"half"},
+    {key:"water", name:"fresh water, boiled then cooled to 80–85°C", sub:"", amount:800, unit:"ml", mode:"water"}
+  ];
+
+  function trim(n){ n = Math.round(n*100)/100; return String(n); }
+
+  function format(item, factor){
+    var v = item.amount * factor;
+    if(item.mode === "water"){
+      if(v >= 1000){ return trim(Math.round(v/100)/10) + " L"; }
+      return Math.round(v) + " ml";
+    }
+    if(item.mode === "half"){
+      var r = Math.round(v*2)/2;
+      return trim(r) + (item.unit ? " " + item.unit : "");
+    }
+    return trim(v) + (item.unit ? " " + item.unit : "");
+  }
+
+  function renderIngredients(){
+    var factor = servings / BASE;
+    var html = "";
+    for(var i=0;i<ingredients.length;i++){
+      var it = ingredients[i];
+      var sub = it.sub ? '<small>'+it.sub+'</small>' : '';
+      html += '<li><span class="amt">' + format(it, factor) + '</span><span class="ing-name">' + it.name + sub + '</span></li>';
+    }
+    document.getElementById("ingredients").innerHTML = html;
+    document.getElementById("count").textContent = servings;
+  }
+
+  function setServings(n){
+    servings = Math.max(MIN, Math.min(MAX, n));
+    document.getElementById("minus").disabled = (servings <= MIN);
+    document.getElementById("plus").disabled = (servings >= MAX);
+    renderIngredients();
+  }
+
+  document.getElementById("minus").addEventListener("click", function(){ setServings(servings-1); });
+  document.getElementById("plus").addEventListener("click", function(){ setServings(servings+1); });
+  setServings(BASE);
+
+  /* ---------- Countdown timers ---------- */
+  function fmtTime(s){
+    s = Math.max(0, Math.round(s));
+    var h = Math.floor(s/3600);
+    var m = Math.floor((s%3600)/60);
+    var sec = s%60;
+    var pad = function(x){ return (x<10?"0":"")+x; };
+    return (h>0 ? h+":"+pad(m) : m) + ":" + pad(sec);
+  }
+
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      var ctx = new Ctx();
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = "sine"; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.1);
+      o.start(); o.stop(ctx.currentTime+1.15);
+    }catch(e){}
+  }
+
+  function initTimer(el){
+    var total = parseInt(el.getAttribute("data-seconds"),10);
+    var remaining = total;
+    var endAt = 0, raf = null, running = false;
+    var display = el.querySelector(".timer-display");
+    var startBtn = el.querySelector(".t-start");
+    var resetBtn = el.querySelector(".t-reset");
+    var presets = el.querySelectorAll(".presets button");
+
+    function paint(){ display.textContent = fmtTime(remaining); }
+    function stopLoop(){ if(raf){ clearInterval(raf); raf = null; } }
+
+    function tick(){
+      remaining = (endAt - Date.now())/1000;
+      if(remaining <= 0){
+        remaining = 0; paint();
+        running = false; stopLoop();
+        startBtn.textContent = "Start";
+        el.classList.add("done");
+        display.textContent = "Done!";
+        beep();
+        return;
+      }
+      paint();
+    }
+
+    function start(){
+      if(running) return;
+      if(remaining <= 0) remaining = total;
+      el.classList.remove("done");
+      endAt = Date.now() + remaining*1000;
+      running = true;
+      startBtn.textContent = "Pause";
+      raf = setInterval(tick, 250);
+    }
+    function pause(){
+      if(!running) return;
+      running = false; stopLoop();
+      startBtn.textContent = "Resume";
+    }
+    function reset(){
+      running = false; stopLoop();
+      remaining = total;
+      el.classList.remove("done");
+      startBtn.textContent = "Start";
+      paint();
+    }
+
+    startBtn.addEventListener("click", function(){ running ? pause() : start(); });
+    resetBtn.addEventListener("click", reset);
+
+    for(var i=0;i<presets.length;i++){
+      presets[i].addEventListener("click", function(){
+        for(var j=0;j<presets.length;j++) presets[j].classList.remove("active");
+        this.classList.add("active");
+        total = parseInt(this.getAttribute("data-s"),10);
+        reset();
+      });
+    }
+
+    paint();
+  }
+
+  var timers = document.querySelectorAll(".timer");
+  for(var i=0;i<timers.length;i++) initTimer(timers[i]);
+})();
+</script>
+</body>
+</html>

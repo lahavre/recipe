@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pan-Grilled Salmon with Garlic Lemon Butter</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #2a241d;
+    --muted: #6b6055;
+    --line: #ddd3c5;
+    --paper: #faf7f1;
+    --accent: #7a3e2f;
+    --cream: #f1ebe0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+
+  .card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  header {
+    padding: 2.75rem 2.75rem 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .tagline {
+    margin-top: 0.85rem;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 46ch;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .meta div { font-size: 0.85rem; }
+  .meta .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .meta .value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    margin-top: 0.15rem;
+  }
+
+  /* Servings control */
+  .servings {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 2.75rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+  }
+  .servings .ctl-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .stepper button {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .stepper button:hover:not(:disabled) { background: var(--cream); border-color: var(--accent); }
+  .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .stepper .count {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    min-width: 1.6ch;
+    text-align: center;
+  }
+  input[type="range"] {
+    flex: 1;
+    min-width: 140px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  /* Body grid */
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 0;
+  }
+  @media (max-width: 640px) {
+    .body { grid-template-columns: 1fr; }
+    header, .servings { padding-left: 1.75rem; padding-right: 1.75rem; }
+  }
+
+  .ingredients {
+    padding: 2.25rem 2rem 2.25rem 2.75rem;
+    border-right: 1px solid var(--line);
+  }
+  .method {
+    padding: 2.25rem 2.75rem 2.25rem 2rem;
+  }
+  @media (max-width: 640px) {
+    .ingredients { border-right: none; border-bottom: 1px solid var(--line); padding: 2rem 1.75rem; }
+    .method { padding: 2rem 1.75rem; }
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  #ing-list { list-style: none; }
+  #ing-list li {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 0.95rem;
+  }
+  #ing-list li:last-child { border-bottom: none; }
+  #ing-list .amt {
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    min-width: 4.5ch;
+  }
+
+  #step-list { list-style: none; counter-reset: step; }
+  #step-list li {
+    position: relative;
+    padding: 0 0 1.4rem 2.4rem;
+    counter-increment: step;
+    font-size: 0.95rem;
+  }
+  #step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -0.1rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 50%;
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #step-list li:last-child { padding-bottom: 0; }
+  .step-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Timers */
+  .timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
+    padding: 0.4rem 0.65rem;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+  .timer .time {
+    font-family: 'Fraunces', serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+    min-width: 3.5ch;
+    text-align: center;
+  }
+  .timer.done .time { color: var(--accent); }
+  .timer button {
+    border: none;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .timer button:hover { opacity: 0.85; }
+  .timer button.ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+
+  .notes {
+    padding: 1.75rem 2.75rem 2.25rem;
+    border-top: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .notes h2 { font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .notes p { font-size: 0.92rem; color: var(--muted); }
+  @media (max-width: 640px) {
+    .notes { padding: 1.75rem; }
+  }
+
+  footer {
+    max-width: 760px;
+    margin: 1.25rem auto 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { border: none; }
+    .servings, .timer, footer { display: none !important; }
+    .body { grid-template-columns: 1fr 1.6fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <div class="eyebrow">Weeknight Dinner &middot; 20 Minutes</div>
+      <h1>Pan-Grilled Salmon with Garlic Lemon Butter</h1>
+      <p class="tagline">Crispy-seared fillets bathed in a glossy garlic-lemon butter sauce, spooned over the top right in the pan.</p>
+      <div class="meta">
+        <div><div class="label">Prep</div><div class="value">10 min</div></div>
+        <div><div class="label">Cook</div><div class="value">12 min</div></div>
+        <div><div class="label">Serves</div><div class="value"><span id="serves-meta">4</span></div></div>
+      </div>
+    </header>
+
+    <div class="servings">
+      <span class="ctl-label">Servings</span>
+      <div class="stepper">
+        <button id="minus" aria-label="Fewer servings">&minus;</button>
+        <span class="count" id="count">4</span>
+        <button id="plus" aria-label="More servings">+</button>
+      </div>
+      <input type="range" id="slider" min="1" max="12" value="4" step="1" aria-label="Adjust servings">
+    </div>
+
+    <div class="body">
+      <div class="ingredients">
+        <h2>Ingredients</h2>
+        <ul id="ing-list"></ul>
+      </div>
+      <div class="method">
+        <h2>Method</h2>
+        <ol id="step-list"></ol>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h2>Notes</h2>
+      <p>Pat the salmon bone-dry before searing or it will steam instead of crisp, and leave it undisturbed once it hits the pan so the skin releases on its own. Pull it at 120&ndash;125&deg;F internal for medium &mdash; it keeps cooking off the heat. Pairs beautifully with rice, roasted asparagus, or a simple green salad.</p>
+    </div>
+  </div>
+
+  <footer>Tip: use your browser's Print option to save as PDF or print a clean copy.</footer>
+
+<script>
+  const BASE = 4;
+
+  // ---- Data ----
+  const ingredients = [
+    { amt: 4, unit: null,  name: 'salmon fillets (skin-on, ~6 oz each)' },
+    { amt: 1, unit: 'tsp', name: 'salt' },
+    { amt: 0.5, unit: 'tsp', name: 'black pepper' },
+    { amt: 1, unit: 'tbsp', name: 'olive oil' },
+    { amt: 4, unit: 'tbsp', name: 'unsalted butter' },
+    { amt: 4, unit: null,  name: 'garlic cloves, minced' },
+    { amt: 1, unit: null,  name: 'lemon, juiced' },
+    { amt: 1, unit: 'tsp', name: 'lemon zest' },
+    { amt: 2, unit: 'tbsp', name: 'fresh parsley, chopped' },
+    { amt: 1, unit: 'pinch', name: 'red pepper flakes (optional)' },
+  ];
+
+  const steps = [
+    { title: 'Prep the salmon', text: "Pat the salmon completely dry with paper towels. Season both sides with the salt and pepper.", secs: null },
+    { title: 'Heat the pan', text: "Heat the olive oil in a large skillet over medium-high heat until shimmering.", secs: 120 },
+    { title: 'Sear skin-side down', text: "Lay the salmon skin-side down and press gently for a few seconds so it stays flat. Sear undisturbed until the skin is crisp and the flesh has cooked about two-thirds up the side.", secs: 240 },
+    { title: 'Flip and finish', text: "Flip the fillets and cook the other side until just cooked through and the center is barely opaque.", secs: 180 },
+    { title: 'Make the garlic lemon butter', text: "Lower the heat to medium-low. Push the salmon aside and add the butter, garlic, and red pepper flakes to the empty part of the pan. Stir until the garlic is fragrant but not browned.", secs: 60 },
+    { title: 'Finish the sauce', text: "Stir in the lemon juice and zest, then spoon the butter sauce over the salmon repeatedly to glaze it.", secs: 30 },
+    { title: 'Garnish and serve', text: "Sprinkle with parsley and serve right away with extra sauce spooned over the top.", secs: null },
+  ];
+
+  // ---- Ingredient scaling & pretty fractions ----
+  const FRACTIONS = [
+    [0.125, '\u215B'], [0.25, '\u00BC'], [0.333, '\u2153'], [0.375, '\u215C'],
+    [0.5, '\u00BD'], [0.625, '\u215D'], [0.667, '\u2154'], [0.75, '\u00BE'], [0.875, '\u215E'],
+  ];
+
+  function pretty(n) {
+    if (n >= 10) return Math.round(n).toString();
+    const whole = Math.floor(n);
+    const frac = n - whole;
+    if (frac < 0.0625) return whole.toString();
+    if (frac > 0.9375) return (whole + 1).toString();
+    let best = null, bestDiff = 1;
+    for (const [v, s] of FRACTIONS) {
+      const d = Math.abs(frac - v);
+      if (d < bestDiff) { bestDiff = d; best = s; }
+    }
+    if (best && bestDiff < 0.06) {
+      return whole > 0 ? whole + ' ' + best : best;
+    }
+    return (Math.round(n * 10) / 10).toString();
+  }
+
+  function renderIngredients(servings) {
+    const mult = servings / BASE;
+    document.getElementById('ing-list').innerHTML = ingredients.map(i => {
+      const scaled = i.amt * mult;
+      const amtStr = i.unit ? pretty(scaled) + ' ' + i.unit : pretty(scaled);
+      return '<li><span class="amt">' + amtStr + '</span><span>' + i.name + '</span></li>';
+    }).join('');
+  }
+
+  // ---- Timers ----
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' + sec : sec);
+  }
+
+  let audioCtx = null;
+  function beep() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const t = audioCtx.currentTime;
+      for (let k = 0; k < 3; k++) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 880;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const start = t + k * 0.32;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.4, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+        osc.start(start); osc.stop(start + 0.26);
+      }
+    } catch (e) { /* audio not available */ }
+  }
+
+  function makeTimer(totalSecs) {
+    const wrap = document.createElement('div');
+    wrap.className = 'timer';
+
+    const time = document.createElement('span');
+    time.className = 'time';
+    time.textContent = fmt(totalSecs);
+
+    const main = document.createElement('button');
+    main.textContent = 'Start';
+
+    const reset = document.createElement('button');
+    reset.className = 'ghost';
+    reset.textContent = 'Reset';
+
+    let remaining = totalSecs;
+    let handle = null;
+    let state = 'idle'; // idle | running | paused | done
+
+    function tick() {
+      remaining -= 1;
+      if (remaining <= 0) {
+        remaining = 0;
+        time.textContent = 'Done';
+        wrap.classList.add('done');
+        clearInterval(handle); handle = null;
+        state = 'done';
+        main.textContent = 'Start';
+        beep();
+        return;
+      }
+      time.textContent = fmt(remaining);
+    }
+
+    main.addEventListener('click', () => {
+      if (state === 'running') {
+        clearInterval(handle); handle = null;
+        state = 'paused';
+        main.textContent = 'Resume';
+      } else {
+        if (state === 'done') { remaining = totalSecs; wrap.classList.remove('done'); time.textContent = fmt(remaining); }
+        handle = setInterval(tick, 1000);
+        state = 'running';
+        main.textContent = 'Pause';
+      }
+    });
+
+    reset.addEventListener('click', () => {
+      clearInterval(handle); handle = null;
+      remaining = totalSecs;
+      state = 'idle';
+      wrap.classList.remove('done');
+      time.textContent = fmt(totalSecs);
+      main.textContent = 'Start';
+    });
+
+    wrap.append(time, main, reset);
+    return wrap;
+  }
+
+  function renderSteps() {
+    const list = document.getElementById('step-list');
+    list.innerHTML = '';
+    steps.forEach(s => {
+      const li = document.createElement('li');
+      const title = document.createElement('span');
+      title.className = 'step-title';
+      title.textContent = s.title;
+      li.appendChild(title);
+      li.appendChild(document.createTextNode(s.text));
+      if (s.secs) {
+        li.appendChild(document.createElement('br'));
+        li.appendChild(makeTimer(s.secs));
+      }
+      list.appendChild(li);
+    });
+  }
+
+  // ---- Wire up servings controls ----
+  const slider = document.getElementById('slider');
+  const count = document.getElementById('count');
+  const servesMeta = document.getElementById('serves-meta');
+  const minus = document.getElementById('minus');
+  const plus = document.getElementById('plus');
+
+  function setServings(v) {
+    v = Math.max(1, Math.min(12, v));
+    slider.value = v;
+    count.textContent = v;
+    servesMeta.textContent = v;
+    minus.disabled = v <= 1;
+    plus.disabled = v >= 12;
+    renderIngredients(v);
+  }
+
+  slider.addEventListener('input', e => setServings(parseInt(e.target.value, 10)));
+  minus.addEventListener('click', () => setServings(parseInt(slider.value, 10) - 1));
+  plus.addEventListener('click', () => setServings(parseInt(slider.value, 10) + 1));
+
+  setServings(4);
+  renderSteps();
+</script>
+</body>
+</html>

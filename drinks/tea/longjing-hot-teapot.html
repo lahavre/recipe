@@ -160,9 +160,25 @@
     body{background:#fff;}
     .timer button,.servings button{display:none;}
   }
+
+  .crumb{
+    max-width:660px;margin:0 auto 1.25rem;
+    display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+  }
+  .crumb a{ color:var(--muted); text-decoration:none; }
+  .crumb a:hover{ color:var(--ink); }
+  .crumb .sep{ color:var(--line); }
+  @media print{ .crumb{ display:none; } }
 </style>
 </head>
 <body>
+  <nav class="crumb">
+    <a href="../../index.html">&larr; Home</a>
+    <span class="sep">/</span>
+    <a href="index.html">Drinks - Tea</a>
+  </nav>
 <div class="wrap">
   <header>
     <div class="eyebrow">Hot Brew &middot; Glass Teapot &middot; Green Tea</div>

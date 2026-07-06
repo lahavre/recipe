@@ -40,9 +40,9 @@ Recipe filenames are lowercase-kebab-case, e.g. `mushroom-alfredo-spaghetti.html
 
 No other file needs to change — the home page never needs to be touched when adding a recipe.
 
-## Breadcrumbs on subcategory pages
+## Breadcrumbs
 
-Each `<category>/<subcategory>/index.html` shows a two-part breadcrumb, not three:
+**Subcategory pages** (`<category>/<subcategory>/index.html`) show a two-part breadcrumb, not three:
 
 ```html
 <nav class="crumb">
@@ -53,6 +53,18 @@ Each `<category>/<subcategory>/index.html` shows a two-part breadcrumb, not thre
 ```
 
 `Foods - Western` is one plain-text label (category and subcategory joined with " - "), not two separate links — there's no intermediate category page to link to.
+
+**Recipe pages** (`<category>/<subcategory>/<recipe>.html`) also get a breadcrumb, but here both parts are links, since the subcategory's `index.html` genuinely exists one level up in the same folder:
+
+```html
+<nav class="crumb">
+  <a href="../../index.html">&larr; Home</a>
+  <span class="sep">/</span>
+  <a href="index.html">Foods - Western</a>
+</nav>
+```
+
+Since recipe pages are self-contained (no shared stylesheet), add matching `.crumb`/`.crumb a`/`.crumb .sep` CSS directly in that recipe's own `<style>` block, reusing its existing `--muted`/`--line`/`--ink` variables (every recipe page defines these three, regardless of visual theme) so the breadcrumb always fits the page's palette without needing new variables.
 
 ## Accent colors
 
@@ -72,13 +84,14 @@ Each `<category>/<subcategory>/index.html` shows a two-part breadcrumb, not thre
 
 Each recipe page is a **single self-contained HTML file** (its own `<style>` and `<script>`, no external stylesheet) so a recipe can be shared or opened on its own. Every recipe page must include:
 
-1. **Header** — dish name as `<h1>`, a one-sentence tagline, and meta info (prep/cook time or similar) as small chips or labeled fields.
-2. **Servings/batch control** — a stepper (`-` / `+` buttons, or +/- with a range slider) that lets the reader scale the recipe. Ingredient amounts must re-render via JavaScript when this changes (see the `renderIngredients()` pattern in existing recipes) — never hardcode a single serving size.
-3. **Ingredients list** — each item shows a bold/colored amount + the ingredient name. Use **metric units** (g, ml, °C) rather than imperial (oz, lb, cups, °F) — `tsp`/`tbsp` are fine for small volumes since they're used in both systems. Convert any imperial amounts from a source recipe to metric before adding it.
-4. **Method** — numbered steps, each with a short bold title followed by the instruction text. Steps with a wait/cook time get an optional countdown timer widget (Start/Reset buttons, ticks down, beeps and highlights on completion).
-5. **Notes** — a closing section with tips, substitutions, or storage info.
-6. **Print styles** (`@media print`) that hide interactive controls (steppers, timer buttons) and simplify the layout for printing/saving as PDF.
-7. **Responsive layout** (`@media (max-width: ...)`) so the page is usable on a phone screen.
+1. **Breadcrumb** — see the "Breadcrumbs" section above for the exact markup (`Home` and `Foods - Western`, both links).
+2. **Header** — dish name as `<h1>`, a one-sentence tagline, and meta info (prep/cook time or similar) as small chips or labeled fields.
+3. **Servings/batch control** — a stepper (`-` / `+` buttons, or +/- with a range slider) that lets the reader scale the recipe. Ingredient amounts must re-render via JavaScript when this changes (see the `renderIngredients()` pattern in existing recipes) — never hardcode a single serving size.
+4. **Ingredients list** — each item shows a bold/colored amount + the ingredient name. Use **metric units** (g, ml, °C) rather than imperial (oz, lb, cups, °F) — `tsp`/`tbsp` are fine for small volumes since they're used in both systems. Convert any imperial amounts from a source recipe to metric before adding it.
+5. **Method** — numbered steps, each with a short bold title followed by the instruction text. Steps with a wait/cook time get an optional countdown timer widget (Start/Reset buttons, ticks down, beeps and highlights on completion).
+6. **Notes** — a closing section with tips, substitutions, or storage info.
+7. **Print styles** (`@media print`) that hide interactive controls (steppers, timer buttons) and simplify the layout for printing/saving as PDF.
+8. **Responsive layout** (`@media (max-width: ...)`) so the page is usable on a phone screen.
 
 Visual theme (fonts, colors, card vs. flowing layout) can vary per recipe to fit the dish — the two existing recipes (`foods/italian/mushroom-alfredo-spaghetti.html` and `drinks/fruit-tea/forest-berry-hot-tea.html`) are both valid examples of this template with different themes. What must stay consistent is the **structure** above (header → servings → ingredients → method → notes) and the interactive behavior (servings scaling, timers, print-friendliness).
 

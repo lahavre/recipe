@@ -21,19 +21,64 @@
   </nav>
 
   <main>
-    <section class="shelf">
-      <a class="card" href="milk-brew-coffee.html" style="--strip:#6f4a2f">
-        <span class="pour"></span>
-        <span class="body">
-          <h3>Milk Brew Coffee</h3>
-          <p>Coffee grounds steeped directly in milk overnight — heavy-bodied, naturally sweet, and great over ice cream.</p>
-        </span>
-        <span class="go">&rarr;</span>
-      </a>
+    <section class="accordion">
+      <div class="acc-item" style="--accent:#3d6b99">
+        <button class="acc-header" aria-expanded="false" aria-controls="panel-cold">
+          <span class="ch">🧊</span>
+          <span class="label">
+            <h2>Cold Brew</h2>
+            <span class="blurb">Slow-steeped cold, no heat involved.</span>
+          </span>
+          <span class="chevron">&#9662;</span>
+        </button>
+        <div class="acc-panel" id="panel-cold">
+          <div class="acc-panel-inner">
+            <section class="shelf">
+              <a class="card" href="milk-brew-coffee.html" style="--strip:#6f4a2f">
+                <span class="pour"></span>
+                <span class="body">
+                  <h3>Milk Brew Coffee</h3>
+                  <p>Coffee grounds steeped directly in milk overnight — heavy-bodied, naturally sweet, and great over ice cream.</p>
+                </span>
+                <span class="go">&rarr;</span>
+              </a>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" style="--accent:#c9622f">
+        <button class="acc-header" aria-expanded="false" aria-controls="panel-hot">
+          <span class="ch">🔥</span>
+          <span class="label">
+            <h2>Hot Brew</h2>
+            <span class="blurb">Brewed hot and served warm.</span>
+          </span>
+          <span class="chevron">&#9662;</span>
+        </button>
+        <div class="acc-panel" id="panel-hot">
+          <div class="acc-panel-inner">
+            <div class="emptyState">
+              <div class="big">Nothing on this shelf yet</div>
+              When you add a hot brew coffee recipe here, it will show up as a card.
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>Cook &middot; Brew &middot; Enjoy</footer>
 </div>
+
+<script>
+  document.querySelectorAll(".acc-header").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var item = btn.closest(".acc-item");
+      var open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+</script>
 </body>
 </html>

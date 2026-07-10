@@ -98,6 +98,7 @@ a.sub-link:hover .go{transform:translateX(4px);}
 a.sub-link:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
 
 .acc-panel-inner .shelf{padding:1.3rem 1.5rem 1.5rem;border-top:1px solid var(--line);}
+.acc-panel-inner .emptyState{margin:0 1.5rem 1.5rem;}
 
 /* ---- recipe shelf (listing of recipe links) ---- */
 .shelf{display:grid;grid-template-columns:1fr;gap:.9rem;}

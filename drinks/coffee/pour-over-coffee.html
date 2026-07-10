@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour-Over Coffee</title>
+<style>
+  :root{
+    --ink:#2a1f18;
+    --wine:#5c3a22;
+    --ruby:#6f4a2f;
+    --berry:#8a6237;
+    --gold:#c9973d;
+    --blush:#f3e8d8;
+    --paper:#faf5ec;
+    --frost:#f2ece1;
+    --line:#e6d8c2;
+    --muted:#8a7a64;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    background:
+      radial-gradient(120% 80% at 80% -10%, #f7e9d0 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #f0e6d4 0%, transparent 50%),
+      var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    padding:2rem 1.25rem 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:2rem;}
+  .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.66rem;font-weight:600;color:var(--ruby);margin-bottom:1.1rem;
+  }
+  h1{font-size:clamp(2.3rem,8vw,3.5rem);font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--wine);}
+  h1 em{font-style:italic;color:var(--ruby);}
+  .tagline{margin:1.1rem auto 0;max-width:44ch;color:var(--muted);font-size:1.02rem;}
+  .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.6rem;}
+  .chip{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;
+    background:var(--blush);color:var(--wine);border:1px solid var(--line);
+    border-radius:999px;padding:.4rem .85rem;
+  }
+
+  /* serving control */
+  .servings{
+    display:flex;align-items:center;justify-content:center;gap:1rem;
+    margin:1.8rem auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:.85rem 1.1rem;max-width:320px;
+    box-shadow:0 6px 20px -14px rgba(92,58,34,.5);
+  }
+  .servings .label{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .servings .count{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;
+    font-size:1.15rem;color:var(--wine);min-width:5.5rem;text-align:center;
+  }
+  .servings button{
+    width:2.3rem;height:2.3rem;border-radius:50%;border:none;cursor:pointer;
+    background:var(--ruby);color:#fff;font-size:1.3rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .12s ease,background .12s ease;
+  }
+  .servings button:active{transform:scale(.9);}
+  .servings button:disabled{background:var(--line);cursor:not-allowed;}
+  .servings button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .servings button:hover{background:var(--wine);}
+  }
+
+  section{margin-top:2.6rem;}
+  .section-head{display:flex;align-items:baseline;gap:.8rem;border-bottom:1px solid var(--line);padding-bottom:.5rem;margin-bottom:1.3rem;}
+  .section-head h2{font-size:1.4rem;font-weight:400;color:var(--berry);}
+  .section-head .num{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+
+  ul.ingredients{list-style:none;}
+  ul.ingredients li{display:flex;align-items:baseline;gap:.6rem;padding:.55rem 0;border-bottom:1px dotted var(--line);}
+  ul.ingredients li:last-child{border-bottom:none;}
+  .amt{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:.92rem;color:var(--ruby);min-width:5.5rem;flex-shrink:0;}
+
+  ol.steps{list-style:none;counter-reset:step;}
+  ol.steps li{counter-increment:step;position:relative;padding:0 0 1.5rem 3.2rem;}
+  ol.steps li::before{
+    content:counter(step,decimal-leading-zero);position:absolute;left:0;top:-.1rem;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.05em;
+    color:#fff;background:var(--ruby);width:2.1rem;height:2.1rem;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:1.05rem;top:2.2rem;bottom:.2rem;width:1px;background:var(--line);}
+  .step-title{font-weight:700;color:var(--wine);display:block;margin-bottom:.15rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.95rem;letter-spacing:.01em;}
+  .step-body{color:var(--ink);}
+  .step-body strong{color:var(--wine);}
+
+  /* timer widget */
+  .timer{
+    margin-top:.7rem;display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+    background:var(--frost);border:1px solid #e6dac6;border-radius:12px;padding:.5rem .65rem;
+  }
+  .timer.done{background:#e7f6ec;border-color:#bfe6c9;}
+  .timer-display{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
+    font-weight:700;font-size:1.05rem;color:var(--ruby);min-width:4.6rem;text-align:center;letter-spacing:.02em;
+  }
+  .timer.done .timer-display{color:#1d7a3c;}
+  .timer-hint{font-family:"Helvetica Neue",Arial,sans-serif;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:.1rem;}
+  .timer button{
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.03em;
+    border:none;cursor:pointer;border-radius:8px;padding:.4rem .7rem;background:var(--ruby);color:#fff;
+    transition:background .12s ease,transform .1s ease;
+  }
+  .timer button.ghost{background:transparent;color:var(--ruby);border:1px solid #e6dac6;}
+  .timer button:active{transform:scale(.94);}
+  .timer button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  @media (hover:hover) and (pointer:fine){
+    .timer button:hover{filter:brightness(1.08);}
+  }
+
+  .notes{margin-top:2.8rem;background:linear-gradient(180deg,var(--blush),#fff);border:1px solid var(--line);border-radius:14px;padding:1.5rem 1.6rem;}
+  .notes h2{font-size:1.05rem;color:var(--wine);font-weight:700;font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;margin-bottom:.7rem;}
+  .notes ul{list-style:none;}
+  .notes li{position:relative;padding-left:1.3rem;margin-bottom:.6rem;color:var(--ink);font-size:.96rem;}
+  .notes li::before{content:"\2022";position:absolute;left:.2rem;top:-.05rem;color:var(--gold);font-size:1.2rem;}
+  .notes li:last-child{margin-bottom:0;}
+
+  footer{text-align:center;margin-top:3rem;font-family:"Helvetica Neue",Arial,sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  @media (prefers-reduced-motion:no-preference){
+    .wrap{animation:rise .6s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  }
+  @media print{
+    body{background:#fff;}
+    .timer button,.servings button{display:none;}
+  }
+
+  .crumb{
+    max-width:660px;margin:0 auto 1.25rem;
+    display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:.8rem;
+  }
+  .crumb a{ color:var(--muted); text-decoration:none; }
+  .crumb a:hover{ color:var(--ink); }
+  .crumb .sep{ color:var(--line); }
+  @media print{ .crumb{ display:none; } }
+</style>
+</head>
+<body>
+  <nav class="crumb">
+    <a href="../../index.html">&larr; Home</a>
+    <span class="sep">/</span>
+    <a href="index.html">Drinks - Coffee</a>
+  </nav>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hot Brew &middot; Pour-Over</div>
+    <h1>Pour-Over <em>Coffee</em></h1>
+    <p class="tagline">A precise, timed four-pour method — the first pour sets acidity, the second builds sweetness, and the last two dial in the concentration. About two and a half minutes start to finish.</p>
+    <div class="meta">
+      <span class="chip">14g : 200g (~1:14 ratio)</span>
+      <span class="chip">91&deg;C water</span>
+      <span class="chip">Coarse grind</span>
+      <span class="chip">~2:30 total</span>
+    </div>
+
+    <div class="servings" aria-label="Adjust batch size">
+      <button id="minus" aria-label="Fewer cups">&minus;</button>
+      <div>
+        <div class="count"><span id="count">1</span> cup</div>
+        <div class="label">Batch size</div>
+      </div>
+      <button id="plus" aria-label="More cups">+</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head"><span class="num">01</span><h2>Ingredients</h2></div>
+    <ul class="ingredients" id="ingredients"></ul>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="num">02</span><h2>Method</h2></div>
+    <ol class="steps">
+      <li>
+        <span class="step-title">Prep your gear</span>
+        <span class="step-body">Rinse the paper filter in your dripper with hot water to remove any papery taste, and warm the server — then discard that water. Add the ground coffee to the filter and give it a gentle shake to level the bed.</span>
+      </li>
+      <li>
+        <span class="step-title">First pour — sets the acidity</span>
+        <span class="step-body">Start your timer and pour the first 20% of your water (40g for a 200g brew) over the grounds, spending about 10 seconds on the pour. Agitate the dripper gently 2&ndash;3 times.</span>
+        <div class="timer" data-seconds="40">
+          <span class="timer-hint">Until next pour</span>
+          <span class="timer-display">0:40</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Second pour — builds the sweetness</span>
+        <span class="step-body">At 0:40, pour steadily and a little more aggressively up to 100g total (another 20% of your water), again over about 10 seconds.</span>
+        <div class="timer" data-seconds="30">
+          <span class="timer-hint">Until next pour</span>
+          <span class="timer-display">0:30</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Third pour — adjusts concentration</span>
+        <span class="step-body">At 1:10, pour gently up to 150g total (25% of your water) to fine-tune the strength — heavier here makes it stronger, lighter makes it milder.</span>
+        <div class="timer" data-seconds="30">
+          <span class="timer-hint">Until next pour</span>
+          <span class="timer-display">0:30</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Fourth pour — finishes the brew</span>
+        <span class="step-body">At 1:40, pour the final 50g gently up to 200g total, then give the dripper a final gentle stir or swirl to even out the extraction.</span>
+        <div class="timer" data-seconds="50">
+          <span class="timer-hint">Until drawdown ends</span>
+          <span class="timer-display">0:50</span>
+          <button class="t-start">Start</button>
+          <button class="t-reset ghost">Reset</button>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">Finish and serve</span>
+        <span class="step-body">Once the water fully drains from the coffee bed — around 2:30 total — remove the dripper and serve right away.</span>
+      </li>
+    </ol>
+  </section>
+
+  <div class="notes">
+    <h2>Good to know</h2>
+    <ul>
+      <li>Spend about 10 seconds on each individual pour for consistency — pouring too fast or too slow changes how evenly the water saturates the grounds.</li>
+      <li>The first pour is mostly about acidity, the second about sweetness, and the third and fourth are where you dial in the concentration to taste.</li>
+      <li>A coarse grind and a light roast are recommended for this method. If your brew runs too fast, grind a touch finer; if it runs too slow, go coarser.</li>
+      <li>If you scale up to a bigger batch, keep the same four-pour rhythm and proportions — the roughly 1:14 coffee-to-water ratio is what matters most, not the exact gram figures.</li>
+    </ul>
+  </div>
+
+  <footer>Brewed hot &middot; Pour-over method &middot; Best served fresh</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Ingredient scaling ---------- */
+  var BASE = 1;            // base batch = 1 cup (14g coffee : 200g water)
+  var MIN = 1, MAX = 4;
+  var servings = BASE;
+
+  var ingredients = [
+    {key:"coffee", name:"coffee, coarsely ground (light roast recommended)", amount:14, unit:"g", mode:"int"},
+    {key:"water",  name:"water, off the boil and cooled to 91&deg;C", amount:200, unit:"g", mode:"int"}
+  ];
+
+  function trim(n){ n = Math.round(n*100)/100; return String(n); }
+
+  function format(item, factor){
+    var v = item.amount * factor;
+    if(item.mode === "int"){
+      return Math.round(v) + (item.unit ? " " + item.unit : "");
+    }
+    return trim(v) + (item.unit ? " " + item.unit : "");
+  }
+
+  function renderIngredients(){
+    var factor = servings / BASE;
+    var html = "";
+    for(var i=0;i<ingredients.length;i++){
+      var it = ingredients[i];
+      html += '<li><span class="amt">' + format(it, factor) + '</span><span>' + it.name + '</span></li>';
+    }
+    document.getElementById("ingredients").innerHTML = html;
+    document.getElementById("count").textContent = servings;
+  }
+
+  function setServings(n){
+    servings = Math.max(MIN, Math.min(MAX, n));
+    document.getElementById("minus").disabled = (servings <= MIN);
+    document.getElementById("plus").disabled = (servings >= MAX);
+    renderIngredients();
+  }
+
+  document.getElementById("minus").addEventListener("click", function(){ setServings(servings-1); });
+  document.getElementById("plus").addEventListener("click", function(){ setServings(servings+1); });
+  setServings(BASE);
+
+  /* ---------- Countdown timers ---------- */
+  function fmtTime(s){
+    s = Math.max(0, Math.round(s));
+    var m = Math.floor(s/60);
+    var sec = s%60;
+    var pad = function(x){ return (x<10?"0":"")+x; };
+    return m + ":" + pad(sec);
+  }
+
+  function beep(){
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      var ctx = new Ctx();
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = "sine"; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.1);
+      o.start(); o.stop(ctx.currentTime+1.15);
+    }catch(e){}
+  }
+
+  function initTimer(el){
+    var total = parseInt(el.getAttribute("data-seconds"),10);
+    var remaining = total;
+    var endAt = 0, raf = null, running = false;
+    var display = el.querySelector(".timer-display");
+    var startBtn = el.querySelector(".t-start");
+    var resetBtn = el.querySelector(".t-reset");
+
+    function paint(){ display.textContent = fmtTime(remaining); }
+    function stopLoop(){ if(raf){ clearInterval(raf); raf = null; } }
+
+    function tick(){
+      remaining = (endAt - Date.now())/1000;
+      if(remaining <= 0){
+        remaining = 0; paint();
+        running = false; stopLoop();
+        startBtn.textContent = "Start";
+        el.classList.add("done");
+        display.textContent = "Done!";
+        beep();
+        return;
+      }
+      paint();
+    }
+
+    function start(){
+      if(running) return;
+      if(remaining <= 0) remaining = total;
+      el.classList.remove("done");
+      endAt = Date.now() + remaining*1000;
+      running = true;
+      startBtn.textContent = "Pause";
+      raf = setInterval(tick, 250);
+    }
+    function pause(){
+      if(!running) return;
+      running = false; stopLoop();
+      startBtn.textContent = "Resume";
+    }
+    function reset(){
+      running = false; stopLoop();
+      remaining = total;
+      el.classList.remove("done");
+      startBtn.textContent = "Start";
+      paint();
+    }
+
+    startBtn.addEventListener("click", function(){ running ? pause() : start(); });
+    resetBtn.addEventListener("click", reset);
+
+    paint();
+  }
+
+  var timers = document.querySelectorAll(".timer");
+  for(var i=0;i<timers.length;i++) initTimer(timers[i]);
+})();
+</script>
+</body>
+</html>

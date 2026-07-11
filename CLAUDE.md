@@ -136,6 +136,10 @@ Since recipe pages are self-contained (no shared stylesheet), add matching `.cru
 | Tea | `#5c7a5a` |
 | Coffee | `#6f4a2f` |
 
+For **Western, Italian, Chinese, and Coffee**, every recipe card's `--strip` uses that exact table color — pick it verbatim.
+
+**Fruit Tea is the one exception**: since its recipes are visually distinct (different fruits/flowers), each card instead uses its own thematic color (or a two-color `linear-gradient(160deg, colorA, colorB)` for blends), rather than the flat `#a4123f` for every card — see `drinks/fruit-tea/index.html` for examples. Use this per-recipe approach only where a subcategory's recipes are similarly visually distinct from each other; default to the flat table color otherwise.
+
 ## Recipe page rules
 
 Each recipe page is a **single self-contained HTML file** (its own `<style>` and `<script>`, no external stylesheet) so a recipe can be shared or opened on its own. Every recipe page must include:

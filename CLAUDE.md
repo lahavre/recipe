@@ -24,7 +24,7 @@ Recipe filenames are lowercase-kebab-case, e.g. `mushroom-alfredo-spaghetti.html
 ## Adding a new recipe
 
 1. Save the recipe page as `<category>/<subcategory>/<recipe-name>.html`, following the "Recipe page rules" below.
-2. Open `<category>/<subcategory>/index.html` and add a card inside `<section class="shelf">`:
+2. Open `<category>/<subcategory>/index.html` and add a card:
    ```html
    <a class="card" href="<recipe-name>.html" style="--strip:#7a3e2f">
      <span class="pour"></span>
@@ -35,10 +35,66 @@ Recipe filenames are lowercase-kebab-case, e.g. `mushroom-alfredo-spaghetti.html
      <span class="go">&rarr;</span>
    </a>
    ```
-3. If the subcategory page currently shows the "Nothing on this shelf yet" empty state, replace that `<div class="emptyState">` block with the `<section class="shelf">` block above.
+   - If the page has a plain `<section class="shelf">`, add the card there directly.
+   - If the page uses the Cold Brew / Hot Brew accordion instead (currently `drinks/fruit-tea` and `drinks/coffee` — see "Cold Brew / Hot Brew accordion" below), add the card inside the `<section class="shelf">` within the matching `#panel-cold` or `#panel-hot` panel.
+3. If the target shelf currently shows the "Nothing on this shelf yet" empty state, replace that `<div class="emptyState">` block with a `<section class="shelf">` containing the card above.
 4. Pick `--strip` from the accent colors table below so the card matches its category.
 
 No other file needs to change — the home page never needs to be touched when adding a recipe.
+
+## Cold Brew / Hot Brew accordion
+
+`drinks/fruit-tea/index.html` and `drinks/coffee/index.html` split their shelf into two expandable sections instead of one flat list, since both categories have a natural cold/hot split:
+
+```html
+<section class="accordion">
+  <div class="acc-item" style="--accent:#3d6b99">
+    <button class="acc-header" aria-expanded="false" aria-controls="panel-cold">
+      <span class="ch">🧊</span>
+      <span class="label">
+        <h2>Cold Brew</h2>
+        <span class="blurb">...</span>
+      </span>
+      <span class="chevron">&#9662;</span>
+    </button>
+    <div class="acc-panel" id="panel-cold">
+      <div class="acc-panel-inner">
+        <section class="shelf">
+          <!-- cold brew recipe cards -->
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-item" style="--accent:#c9622f">
+    <button class="acc-header" aria-expanded="false" aria-controls="panel-hot">
+      <span class="ch">🔥</span>
+      <span class="label">
+        <h2>Hot Brew</h2>
+        <span class="blurb">...</span>
+      </span>
+      <span class="chevron">&#9662;</span>
+    </button>
+    <div class="acc-panel" id="panel-hot">
+      <div class="acc-panel-inner">
+        <!-- either a <section class="shelf"> of cards, or an <div class="emptyState"> if empty -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".acc-header").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var item = btn.closest(".acc-item");
+      var open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+</script>
+```
+
+Only split a subcategory into this accordion once it has (or will soon have) recipes on both sides — a single flat `<section class="shelf">` is the default for every other subcategory page and needs no extra script. `--accent` is `#3d6b99` (cold) / `#c9622f` (hot) by convention; reuse those exact colors if this pattern gets added elsewhere.
 
 ## Breadcrumbs
 
@@ -87,7 +143,7 @@ Each recipe page is a **single self-contained HTML file** (its own `<style>` and
 1. **Breadcrumb** — see the "Breadcrumbs" section above for the exact markup (`Home` and `Foods - Western`, both links).
 2. **Header** — dish name as `<h1>`, a one-sentence tagline, and meta info (prep/cook time or similar) as small chips or labeled fields.
 3. **Servings/batch control** — a stepper (`-` / `+` buttons, or +/- with a range slider) that lets the reader scale the recipe. Ingredient amounts must re-render via JavaScript when this changes (see the `renderIngredients()` pattern in existing recipes) — never hardcode a single serving size.
-4. **Ingredients list** — each item shows a bold/colored amount + the ingredient name. Use **metric units** (g, ml, °C) rather than imperial (oz, lb, cups, °F) — `tsp`/`tbsp` are fine for small volumes since they're used in both systems. Convert any imperial amounts from a source recipe to metric before adding it.
+4. **Ingredients list** — each item shows a bold/colored amount + the ingredient name. Use **metric units** (g, ml, °C) rather than imperial (oz, lb, cups, °F) — `tsp`/`tbsp` are fine for small volumes since they're used in both systems. Convert any imperial amounts from a source recipe to metric before adding it. Give the amount element `flex-shrink: 0` in its CSS — without it, longer values like "2 ½ tbsp" can get compressed by the flex layout and visually overlap the ingredient name next to it.
 5. **Method** — numbered steps, each with a short bold title followed by the instruction text. Steps with a wait/cook time get an optional countdown timer widget (Start/Reset buttons, ticks down, beeps and highlights on completion).
 6. **Notes** — a closing section with tips, substitutions, or storage info. If the recipe was adapted from an external site or video, add a final line/bullet: `Recipe adapted from <a href="URL" target="_blank" rel="noopener noreferrer">Site Name</a>.` — link out with `target="_blank" rel="noopener noreferrer"` since it leaves the site. Skip this line entirely for recipes that weren't sourced from an external page (e.g. ones written from scratch or provided directly). Add a `.notes a{ color: var(--accent); text-decoration: underline; }` rule (swap `--accent` for that page's own accent-ish variable, e.g. `--ruby`) to its `<style>` block so the link is visible against the notes background.
 7. **Print styles** (`@media print`) that hide interactive controls (steppers, timer buttons) and simplify the layout for printing/saving as PDF.

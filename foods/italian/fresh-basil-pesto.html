@@ -304,6 +304,7 @@
         <div><div class="label">Prep</div><div class="value">10 min</div></div>
         <div><div class="label">Cook</div><div class="value">None</div></div>
         <div><div class="label">Batches</div><div class="value"><span id="serves-meta">1</span></div></div>
+        <div><div class="label">Pasta portions</div><div class="value">~<span id="portions-meta">6</span></div></div>
       </div>
     </header>
 
@@ -336,7 +337,7 @@
       <p>Keep pesto away from direct heat. To serve with pasta, toss it through off the heat with a splash of pasta water rather than cooking it in the pan.</p>
       <p>Store in a tightly sealed jar in the fridge with a thin layer of olive oil on top to stop it browning, and use within 3–4 days. It also freezes well in small containers or ice cube trays.</p>
       <p>Great with pasta or gnocchi, spread on focaccia, spooned over burrata, or alongside chicken, lamb, fish, or vegetables. A mortar and pestle is the traditional alternative to a blender.</p>
-      <p>Recipe adapted from <a href="https://www.vincenzosplate.com/fresh-basil-pesto/" target="_blank" rel="noopener noreferrer">Vincenzo's Plate</a> (also on <a href="https://youtu.be/aF0S2ekE2r8" target="_blank" rel="noopener noreferrer">YouTube</a>).</p>
+      <p>Recipe adapted from <a href="https://www.vincenzosplate.com/fresh-basil-pesto/" target="_blank" rel="noopener noreferrer">Vincenzo's Plate</a> (also on <a href="https://youtu.be/aF0S2ekE2r8" target="_blank" rel="noopener noreferrer">YouTube</a>). Pesto-per-portion guide from <a href="https://www.youtube.com/watch?v=fATTvxA4PoU" target="_blank" rel="noopener noreferrer">Sharmis Passions</a> (4 tbsp pesto for 200g spaghetti).</p>
     </div>
   </div>
 
@@ -363,7 +364,8 @@
     { title: 'Blend in the basil', text: "Add the basil, Parmigiano, a pinch of sea salt, and the remaining olive oil. Blend briefly — just long enough to bring it together.", secs: 30 },
     { title: 'Scrape and stir', text: "Scrape any cheese stuck to the sides of the blender back into the pesto and stir it through with a spoon.", secs: null },
     { title: 'Taste and adjust', text: "Taste the pesto. If it's too salty, add a little extra basil and olive oil and pulse until balanced; if it's too thick, add a small drizzle of oil and pulse again.", secs: null },
-    { title: 'Store', text: "Transfer to a tightly sealed jar, cover the surface with a thin layer of olive oil, and refrigerate until needed.", secs: null },
+    { title: 'Toss with pasta', text: "Use about 2 tablespoons of pesto per 100g portion of pasta (one person) — one batch makes roughly 12 tablespoons, enough for about 6 portions. Toss it through the drained pasta off the heat, loosening with a splash of the pasta water, and finish with extra grated Parmigiano.", secs: null },
+    { title: 'Store the rest', text: "Transfer any leftover pesto to a tightly sealed jar, cover the surface with a thin layer of olive oil, and refrigerate until needed.", secs: null },
   ];
 
   // ---- Ingredient scaling & pretty fractions ----
@@ -514,6 +516,7 @@
     slider.value = v;
     count.textContent = v;
     servesMeta.textContent = v;
+    document.getElementById('portions-meta').textContent = v * 6;
     minus.disabled = v <= 1;
     plus.disabled = v >= 6;
     renderIngredients(v);
